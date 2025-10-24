@@ -1,6 +1,6 @@
 """
 Core script generation module using OpenAI API.
-Generates educational scripts in JSON format following edu_script_v0.1 schema.
+Generates educational scripts in JSON format following edu_script_v0.1 schema
 """
 
 import json
