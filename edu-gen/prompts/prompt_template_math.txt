@@ -1,0 +1,12 @@
+Generate a complete educational script for the following math topic, strictly following the edu_script_v0.1 schema format:
+
+Topic: {topic}
+
+Requirements:
+1. Use English language with elementary tone, warm and concise narration style
+2. Organize content in this order: intro → explanation → practice_mcq → summary
+3. Ensure all required fields are included
+4. Multiple choice section needs 2-4 options with correct answer index (0-based)
+5. Content should be suitable for elementary students, with engaging and lively language
+
+Output only the JSON format that conforms to the schema, without any additional text explanations.

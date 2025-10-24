@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Educational Script Schema v0.1",
+  "description": "Schema for educational teaching scripts with English language support",
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "0.1"
+        },
+        "language": {
+          "type": "string",
+          "const": "en-US"
+        },
+        "tone": {
+          "type": "string",
+          "const": "elementary"
+        },
+        "topic": {
+          "type": "string",
+          "description": "The educational topic being taught"
+        },
+        "duration_estimate": {
+          "type": "number",
+          "description": "Estimated duration in seconds"
+        }
+      },
+      "required": ["version", "language", "tone", "topic"]
+    },
+    "intro": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Introduction title"
+        },
+        "narration": {
+          "type": "string",
+          "description": "Warm introduction narration"
+        }
+      },
+      "required": ["title", "narration"]
+    },
+    "explanation": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Explanation section title"
+        },
+        "narration": {
+          "type": "string",
+          "description": "Detailed explanation narration"
+        }
+      },
+      "required": ["title", "narration"]
+    },
+    "practice_mcq": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Practice section title"
+        },
+        "question": {
+          "type": "string",
+          "description": "Multiple choice question"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 2,
+          "maxItems": 4
+        },
+        "correct_answer": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Index of correct answer (0-based)"
+        },
+        "explanation": {
+          "type": "string",
+          "description": "Explanation of the correct answer"
+        }
+      },
+      "required": ["title", "question", "options", "correct_answer", "explanation"]
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Summary section title"
+        },
+        "narration": {
+          "type": "string",
+          "description": "Summary narration"
+        }
+      },
+      "required": ["title", "narration"]
+    }
+  },
+  "required": ["metadata", "intro", "explanation", "practice_mcq", "summary"]
+}
