@@ -1,6 +1,7 @@
 """
 Text-to-Speech module using OpenAI's TTS API.
 Generates audio files for educational script narrations.
+Incorporate ChatGPT text to speech functionality
 """
 
 from pathlib import Path
