@@ -1,0 +1,66 @@
+{% extends "base.html" %} {% block title %}Generate Script - Educational Script
+Generator{% endblock %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow">
+      <div class="card-header bg-primary text-white text-center">
+        <h4 class="mb-0">
+          <i class="fas fa-plus me-2"></i>Generate Educational Script
+        </h4>
+      </div>
+      <div class="card-body p-4">
+        <form method="POST">
+          <div class="mb-4">
+            <label for="topic" class="form-label">Educational Topic</label>
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="fas fa-graduation-cap"></i>
+              </span>
+              <input
+                type="text"
+                class="form-control"
+                id="topic"
+                name="topic"
+                placeholder="e.g., Addition within 10: 3 + 2"
+                required
+              />
+            </div>
+            <div class="form-text">
+              Enter the topic you want to create an educational script for. Be
+              specific about the learning objective.
+            </div>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="fas fa-magic me-2"></i>Generate Script with Audio
+            </button>
+          </div>
+        </form>
+
+        <div class="mt-4">
+          <h6>Example Topics:</h6>
+          <ul class="list-unstyled">
+            <li>
+              <i class="fas fa-check text-success me-2"></i>Addition within 10:
+              3 + 2
+            </li>
+            <li>
+              <i class="fas fa-check text-success me-2"></i>Subtraction within
+              10: 8 - 3
+            </li>
+            <li>
+              <i class="fas fa-check text-success me-2"></i>Multiplication
+              within 10: 4 × 2
+            </li>
+            <li>
+              <i class="fas fa-check text-success me-2"></i>Division within 10:
+              6 ÷ 2
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

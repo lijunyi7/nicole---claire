@@ -9,6 +9,7 @@ from typing import Dict, Any
 from openai import OpenAI
 from pathlib import Path
 import sys
+from datetime import datetime
 
 # Add parent directory to path for imports
 sys.path.append(str(Path(__file__).parent.parent))
@@ -19,8 +20,10 @@ from config.env_config import get_openai_api_key
 class ScriptGenerator:
     """Generates educational scripts using OpenAI API."""
     
-    def __init__(self, api_key: str = None):
+    def __init__(self, api_key: str = None, generate_audio: bool = False):
         """Initialize the script generator with OpenAI API key."""
+        self.generate_audio = generate_audio
+        
         if api_key:
             self.client = OpenAI(api_key=api_key)
         else:
@@ -88,6 +91,11 @@ class ScriptGenerator:
                 "topic": topic,
                 "duration_estimate": self._estimate_duration(script_data)
             }
+
+            # --- Optional Audio Generation ---
+            if self.generate_audio:
+                audio_filename = self._generate_audio(script_data, topic)
+                script_data["metadata"]["audio_file"] = audio_filename
             
             return script_data
             
@@ -96,10 +104,37 @@ class ScriptGenerator:
         except Exception as e:
             raise Exception(f"OpenAI API call failed: {e}")
     
+    def _generate_audio(self, script_data: Dict[str, Any], topic: str) -> str:
+        """Generate TTS audio for the full narration and save as MP3."""
+        audio_dir = Path(__file__).parent.parent / "outputs" / "audio"
+        audio_dir.mkdir(parents=True, exist_ok=True)
+
+        # Collect narration text
+        full_text = " ".join([
+            script_data.get("intro", {}).get("narration", ""),
+            script_data.get("explanation", {}).get("narration", ""),
+            script_data.get("practice_mcq", {}).get("question", ""),
+            script_data.get("summary", {}).get("narration", "")
+        ])
+
+        audio_filename = f"{topic.replace(' ', '_')}.mp3"
+        audio_path = audio_dir / audio_filename
+
+        tts = self.client.audio.speech.create(
+            model="gpt-4o-mini-tts",
+            voice="alloy",
+            input=full_text
+        )
+
+        with open(audio_path, "wb") as f:
+            f.write(tts.read())
+
+        return audio_filename
+    
     def _estimate_duration(self, script_data: Dict[str, Any]) -> float:
         """Estimate the duration of the script in seconds."""
         total_text = ""
-        
+
         # Collect all narration text
         for section in ["intro", "explanation", "practice_mcq", "summary"]:
             if section in script_data:
@@ -109,7 +144,7 @@ class ScriptGenerator:
                     total_text += script_data[section]["question"]
                 if section == "practice_mcq" and "explanation" in script_data[section]:
                     total_text += script_data[section]["explanation"]
-        
+
         # Estimate ~4 words per second for English speech
         word_count = len(total_text.split())
         estimated_duration = word_count / 4.0
@@ -130,39 +165,3 @@ class ScriptGenerator:
             json.dump(script_data, f, ensure_ascii=False, indent=2)
         
         print(f"Script saved to: {output_file}")
-
-
-def main():
-    """Demo function to test script generation."""
-    import sys
-    
-    if len(sys.argv) != 2:
-        print("Usage: python generate_script.py <topic>")
-        print("Example: python generate_script.py '十以内减法：9 - 4'")
-        sys.exit(1)
-    
-    topic = sys.argv[1]
-    
-    # Load prompt template
-    template_path = Path(__file__).parent.parent / "prompts" / "prompt_template_math.txt"
-    with open(template_path, 'r', encoding='utf-8') as f:
-        prompt_template = f.read()
-    
-    try:
-        generator = ScriptGenerator()
-        script_data = generator.generate_script(topic, prompt_template)
-        
-        # Save to outputs directory
-        output_dir = Path(__file__).parent.parent / "outputs" / "scripts"
-        output_file = output_dir / f"{topic.replace('：', '_').replace(' ', '_')}.json"
-        generator.save_script(script_data, str(output_file))
-        
-        print("Script generation completed successfully!")
-        
-    except Exception as e:
-        print(f"Error: {e}")
-        sys.exit(1)
-
-
-if __name__ == "__main__":
-    main()

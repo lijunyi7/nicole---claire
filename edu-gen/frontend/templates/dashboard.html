@@ -1,0 +1,89 @@
+{% extends "base.html" %} {% block title %}Dashboard - Educational Script
+Generator{% endblock %} {% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h2">Welcome back, {{ user.username }}!</h1>
+    <p class="text-muted">Manage your educational scripts</p>
+  </div>
+  <div>
+    <a href="{{ url_for('generate_script') }}" class="btn btn-primary">
+      <i class="fas fa-plus me-1"></i>Generate New Script
+    </a>
+  </div>
+</div>
+
+{% if scripts %}
+<div class="row">
+  {% for script in scripts %}
+  <div class="col-md-6 col-lg-4 mb-4">
+    <div class="card h-100">
+      <div
+        class="card-header d-flex justify-content-between align-items-center"
+      >
+        <h6 class="mb-0">{{ script.title }}</h6>
+        <div class="dropdown">
+          <button
+            class="btn btn-sm btn-outline-secondary dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+          >
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a
+                class="dropdown-item"
+                href="{{ url_for('view_script', script_id=script.id) }}"
+              >
+                <i class="fas fa-eye me-1"></i>View
+              </a>
+            </li>
+            <li>
+              <form
+                method="POST"
+                action="{{ url_for('delete_script', script_id=script.id) }}"
+                class="d-inline"
+              >
+                <button
+                  type="submit"
+                  class="dropdown-item text-danger"
+                  onclick="return confirm('Are you sure you want to delete this script?')"
+                >
+                  <i class="fas fa-trash me-1"></i>Delete
+                </button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-text text-muted">{{ script.topic }}</p>
+        <small class="text-muted">
+          <i class="fas fa-calendar me-1"></i>
+          {{ script.created_at.strftime('%B %d, %Y') }}
+        </small>
+      </div>
+      <div class="card-footer">
+        <a
+          href="{{ url_for('view_script', script_id=script.id) }}"
+          class="btn btn-outline-primary btn-sm"
+        >
+          <i class="fas fa-eye me-1"></i>View Script
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-5">
+  <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+  <h4 class="text-muted">No scripts yet</h4>
+  <p class="text-muted">
+    Generate your first educational script to get started!
+  </p>
+  <a href="{{ url_for('generate_script') }}" class="btn btn-primary">
+    <i class="fas fa-plus me-1"></i>Generate Your First Script
+  </a>
+</div>
+{% endif %} {% endblock %}
