@@ -1,0 +1,143 @@
+{% extends "base.html" %} {% block title %}Home - Educational Script Generator{%
+endblock %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="hero-section text-center py-5">
+      <h1 class="display-4 fw-bold text-primary mb-4">
+        <i class="fas fa-graduation-cap me-3"></i>
+        Educational Script Generator
+      </h1>
+      <p class="lead mb-4">
+        Transform educational topics into structured, engaging teaching scripts
+        using AI. Perfect for educators, tutors, and content creators.
+      </p>
+
+      {% if not session.user_id %}
+      <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+        <a
+          href="{{ url_for('signup') }}"
+          class="btn btn-primary btn-lg me-md-2"
+        >
+          <i class="fas fa-user-plus me-2"></i>Get Started
+        </a>
+        <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">
+          <i class="fas fa-sign-in-alt me-2"></i>Login
+        </a>
+      </div>
+      {% else %}
+      <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+        <a
+          href="{{ url_for('dashboard') }}"
+          class="btn btn-primary btn-lg me-md-2"
+        >
+          <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+        </a>
+        <a
+          href="{{ url_for('generate_script') }}"
+          class="btn btn-outline-primary btn-lg"
+        >
+          <i class="fas fa-plus me-2"></i>Generate New Script
+        </a>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="features-section mt-5">
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 text-center">
+            <div class="card-body">
+              <i class="fas fa-robot fa-3x text-primary mb-3"></i>
+              <h5 class="card-title">AI-Powered</h5>
+              <p class="card-text">
+                Uses OpenAI GPT-4 to generate high-quality educational content
+                tailored to elementary students.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 text-center">
+            <div class="card-body">
+              <i class="fas fa-file-alt fa-3x text-primary mb-3"></i>
+              <h5 class="card-title">Structured Format</h5>
+              <p class="card-text">
+                Generates scripts following a proven educational schema with
+                intro, explanation, practice, and summary.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 text-center">
+            <div class="card-body">
+              <i class="fas fa-save fa-3x text-primary mb-3"></i>
+              <h5 class="card-title">Save & Manage</h5>
+              <p class="card-text">
+                Store your generated scripts in your personal dashboard for easy
+                access and management.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="how-it-works mt-5">
+      <h2 class="text-center mb-4">How It Works</h2>
+      <div class="row">
+        <div class="col-md-3 text-center mb-4">
+          <div
+            class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+            style="width: 60px; height: 60px"
+          >
+            <span class="fw-bold">1</span>
+          </div>
+          <h5>Enter Topic</h5>
+          <p class="text-muted">
+            Provide an educational topic like "Addition within 10: 1+2"
+          </p>
+        </div>
+        <div class="col-md-3 text-center mb-4">
+          <div
+            class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+            style="width: 60px; height: 60px"
+          >
+            <span class="fw-bold">2</span>
+          </div>
+          <h5>AI Generation</h5>
+          <p class="text-muted">
+            Our AI creates a structured teaching script following educational
+            best practices
+          </p>
+        </div>
+        <div class="col-md-3 text-center mb-4">
+          <div
+            class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+            style="width: 60px; height: 60px"
+          >
+            <span class="fw-bold">3</span>
+          </div>
+          <h5>Review & Save</h5>
+          <p class="text-muted">
+            Review the generated content and save it to your personal library
+          </p>
+        </div>
+        <div class="col-md-3 text-center mb-4">
+          <div
+            class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+            style="width: 60px; height: 60px"
+          >
+            <span class="fw-bold">4</span>
+          </div>
+          <h5>Use & Share</h5>
+          <p class="text-muted">
+            Use your scripts for teaching or convert them to audio for
+            multimedia lessons
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends "base.html" %} {% block title %}Generate Script - Educational Script
+Generator{% endblock %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card shadow">
+      <div class="card-header bg-primary text-white">
+        <h3 class="mb-0">
+          <i class="fas fa-magic me-2"></i>Generate Educational Script
+        </h3>
+      </div>
+      <div class="card-body p-4">
+        <form method="POST" id="generate-form">
+          <div class="mb-4">
+            <label for="topic" class="form-label fw-bold"
+              >Educational Topic</label
+            >
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="fas fa-book"></i>
+              </span>
+              <input
+                type="text"
+                class="form-control form-control-lg"
+                id="topic"
+                name="topic"
+                placeholder="e.g., Addition within 10: 1+2, Subtraction within 10: 9-4"
+                required
+              />
+            </div>
+            <div class="form-text">
+              <i class="fas fa-info-circle me-1"></i>
+              Enter a clear, specific educational topic. The AI will generate a
+              complete teaching script with introduction, explanation, practice
+              questions, and summary.
+            </div>
+          </div>
+
+          <div class="alert alert-info">
+            <i class="fas fa-lightbulb me-2"></i>
+            <strong>Tips for better results:</strong>
+            <ul class="mb-0 mt-2">
+              <li>
+                Be specific about the topic (e.g., "Addition within 10: 1+2"
+                instead of just "Addition")
+              </li>
+              <li>Include the difficulty level or grade range when relevant</li>
+              <li>Specify the mathematical operation or concept clearly</li>
+            </ul>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="fas fa-magic me-2"></i>Generate Script
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <h4>Example Topics</h4>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title">Math Topics</h6>
+              <ul class="list-unstyled mb-0">
+                <li>
+                  <i class="fas fa-check text-success me-2"></i>Addition within
+                  10: 1+2
+                </li>
+                <li>
+                  <i class="fas fa-check text-success me-2"></i>Subtraction
+                  within 10: 9-4
+                </li>
+                <li>
+                  <i class="fas fa-check text-success me-2"></i>Multiplication
+                  tables: 3x4
+                </li>
+                <li>
+                  <i class="fas fa-check text-success me-2"></i>Division basics:
+                  12÷3
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title">Other Subjects</h6>
+              <ul class="list-unstyled mb-0">
+                <li>
+                  <i class="fas fa-check text-success me-2"></i>Basic shapes:
+                  Circle
+                </li>
+                <li>
+                  <i class="fas fa-check text-success me-2"></i>Colors: Primary
+                  colors
+                </li>
+                <li>
+                  <i class="fas fa-check text-success me-2"></i>Animals: Farm
+                  animals
+                </li>
+                <li>
+                  <i class="fas fa-check text-success me-2"></i>Weather: Sunny
+                  day
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

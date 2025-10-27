@@ -1,14 +1,14 @@
 {
   "intro": {
-    "title": "Welcome to Subtraction Fun!",
-    "narration": "Hello, friends! Today, we are going to dive into the exciting world of subtraction. Are you ready to learn how to take away? Let’s start with a simple problem: 9 minus 4!"
+    "title": "Let's Learn Subtraction!",
+    "narration": "Hello, friends! Today, we are going to have some fun with subtraction. We will learn how to subtract 4 from 9. Are you ready? Let’s jump in!"
   },
   "explanation": {
-    "title": "Understanding 9 - 4",
-    "narration": "Alright! When we say 9 minus 4, we are trying to find out how many we have left after taking 4 away from 9. Imagine you have 9 apples. If you give away 4 apples to your friends, let’s find out how many apples you have left. Let’s count together! 9 apples take away 4 apples equals 5 apples. So, 9 minus 4 is 5!"
+    "title": "Understanding Subtraction",
+    "narration": "Subtraction is when we take away a number from another number. If we have 9 apples and we give away 4 apples, we want to find out how many apples we have left. So, we can say 9 minus 4. Let's find out the answer together!"
   },
   "practice_mcq": {
-    "title": "Let’s Practice Together!",
+    "title": "Time for Some Practice!",
     "question": "What is 9 - 4?",
     "options": [
       "5",
@@ -17,17 +17,17 @@
       "3"
     ],
     "correct_answer": 0,
-    "explanation": "Great job! The answer is 5 because when you take away 4 from 9, you have 5 left. Keep practicing and you’ll become a subtraction superstar!"
+    "explanation": "Great job! When we take 4 away from 9, we are left with 5. So, 9 minus 4 equals 5!"
   },
   "summary": {
-    "title": "You Did It!",
-    "narration": "Fantastic work today! We learned how to subtract and found that 9 minus 4 equals 5. Remember, subtraction is all about taking away. Keep practicing, and subtraction will be a piece of cake!"
+    "title": "Wrapping Up!",
+    "narration": "Awesome work today, everyone! We learned how to subtract 4 from 9 and found out that the answer is 5. Remember, subtraction helps us know how many we have left after taking some away. Keep practicing, and you'll be a subtraction superstar!"
   },
   "metadata": {
     "version": "0.1",
     "language": "en-US",
     "tone": "elementary",
     "topic": "Subtraction within 10: 9 - 4",
-    "duration_estimate": 39.2
+    "duration_estimate": 34.0
   }
 }

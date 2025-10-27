@@ -1,0 +1,33 @@
+{
+  "intro": {
+    "title": "Welcome to Addition Fun!",
+    "narration": "Hello, little mathematicians! Today, we're going to have some fun with addition. Are you ready to learn how to add 1 and 2 together? Let's dive in!"
+  },
+  "explanation": {
+    "title": "Understanding 1 + 2",
+    "narration": "When we add numbers, we are putting them together to find out how many we have altogether. So, if we have 1 apple and we add 2 more apples, how many apples do we have now? That's right! 1 plus 2 equals 3. We can think of it as counting: 1, 2, 3! So, 1 + 2 = 3!"
+  },
+  "practice_mcq": {
+    "title": "Let's Practice!",
+    "question": "What is 1 + 2?",
+    "options": [
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "correct_answer": 1,
+    "explanation": "Great job! 1 plus 2 equals 3. When we add those numbers together, we get a total of 3!"
+  },
+  "summary": {
+    "title": "Awesome Work Today!",
+    "narration": "You did fantastic today! We learned that 1 + 2 equals 3. Keep practicing addition, and soon you'll be a math star! See you next time!"
+  },
+  "metadata": {
+    "version": "0.1",
+    "language": "en-US",
+    "tone": "elementary",
+    "topic": "Addition within 10: 1+2",
+    "duration_estimate": 33.0
+  }
+}

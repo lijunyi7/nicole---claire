@@ -1,0 +1,152 @@
+{% extends "base.html" %} {% block title %}{{ script.title }} - Educational
+Script Generator{% endblock %} {% block content %}
+<div class="row">
+  <div class="col-12">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="h2">{{ script.title }}</h1>
+        <p class="text-muted">
+          <i class="fas fa-calendar me-1"></i>
+          Created on {{ script.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+        </p>
+      </div>
+      <div>
+        <a
+          href="{{ url_for('dashboard') }}"
+          class="btn btn-outline-secondary me-2"
+        >
+          <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+        </a>
+        <a href="{{ url_for('generate_script') }}" class="btn btn-primary">
+          <i class="fas fa-plus me-1"></i>Generate Another
+        </a>
+      </div>
+    </div>
+
+    <!-- Script Content -->
+    <div class="card shadow mb-4">
+      <div class="card-header bg-primary text-white">
+        <h3 class="mb-0"><i class="fas fa-file-alt me-2"></i>Script Content</h3>
+      </div>
+      <div class="card-body">
+        <!-- Introduction Section -->
+        <div class="mb-4">
+          <h4 class="text-primary">
+            <i class="fas fa-play-circle me-2"></i>{{ content.intro.title }}
+          </h4>
+          <div class="bg-light p-3 rounded">
+            <p class="mb-0">{{ content.intro.narration }}</p>
+          </div>
+        </div>
+
+        <!-- Explanation Section -->
+        <div class="mb-4">
+          <h4 class="text-primary">
+            <i class="fas fa-lightbulb me-2"></i>{{ content.explanation.title }}
+          </h4>
+          <div class="bg-light p-3 rounded">
+            <p class="mb-0">{{ content.explanation.narration }}</p>
+          </div>
+        </div>
+
+        <!-- Practice Section -->
+        <div class="mb-4">
+          <h4 class="text-primary">
+            <i class="fas fa-question-circle me-2"></i>{{
+            content.practice_mcq.title }}
+          </h4>
+          <div class="bg-light p-3 rounded">
+            <h5 class="mb-3">{{ content.practice_mcq.question }}</h5>
+            <div class="row">
+              {% for option in content.practice_mcq.options %}
+              <div class="col-md-6 mb-2">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="practice_answer"
+                    id="option{{ loop.index0 }}"
+                    value="{{ loop.index0 }}"
+                  />
+                  <label class="form-check-label" for="option{{ loop.index0 }}">
+                    {{ option }}
+                  </label>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            <button
+              type="button"
+              class="btn btn-outline-primary btn-sm mt-2"
+              onclick="checkAnswer()"
+            >
+              <i class="fas fa-check me-1"></i>Check Answer
+            </button>
+            <div id="answer-feedback" class="mt-2" style="display: none">
+              <div class="alert alert-success">
+                <strong>Correct!</strong> {{ content.practice_mcq.explanation }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="mb-4">
+          <h4 class="text-primary">
+            <i class="fas fa-flag-checkered me-2"></i>{{ content.summary.title
+            }}
+          </h4>
+          <div class="bg-light p-3 rounded">
+            <p class="mb-0">{{ content.summary.narration }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metadata -->
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">
+          <i class="fas fa-info-circle me-2"></i>Script Information
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>Topic:</strong> {{ content.metadata.topic }}</p>
+            <p><strong>Language:</strong> {{ content.metadata.language }}</p>
+          </div>
+          <div class="col-md-6">
+            <p><strong>Tone:</strong> {{ content.metadata.tone }}</p>
+            <p>
+              <strong>Estimated Duration:</strong> {{
+              content.metadata.duration_estimate }} seconds
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function checkAnswer() {
+      const correctAnswer = {{ content.practice_mcq.correct_answer }};
+      const selectedAnswer = document.querySelector('input[name="practice_answer"]:checked');
+      const feedback = document.getElementById('answer-feedback');
+
+      if (selectedAnswer) {
+          const isCorrect = parseInt(selectedAnswer.value) === correctAnswer;
+          feedback.style.display = 'block';
+
+          if (isCorrect) {
+              feedback.innerHTML = '<div class="alert alert-success"><strong>Correct!</strong> {{ content.practice_mcq.explanation }}</div>';
+          } else {
+              feedback.innerHTML = '<div class="alert alert-danger"><strong>Incorrect.</strong> {{ content.practice_mcq.explanation }}</div>';
+          }
+      } else {
+          alert('Please select an answer first!');
+      }
+  }
+</script>
+{% endblock %}

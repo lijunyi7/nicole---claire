@@ -1,18 +1,35 @@
 # Educational Script Generator
 
-A minimal Python project that converts educational topics into structured JSON teaching scripts.
+A comprehensive web application that converts educational topics into structured JSON teaching scripts with user authentication and database storage.
 
 ## Features
 
+- 🌐 **Web Interface**: Modern, responsive web application with Bootstrap UI
+- 👤 **User Authentication**: Secure login/signup system with session management
+- 💾 **Database Storage**: SQLite database to store users and generated scripts
 - 🎯 **Topic to Script**: Convert educational topics into structured JSON scripts
 - 📋 **Schema Validation**: Ensures all scripts conform to edu_script_v0.1 schema
 - 🔧 **Modular Design**: Clean separation of concerns with testable components
 - 🔑 **Environment Configuration**: Easy API key management with .env files
+- 📱 **Responsive Design**: Works perfectly on desktop, tablet, and mobile devices
 
 ## Project Structure
 
 ```
 edu-gen/
+├─ app.py                          # Flask web application
+├─ run_web_app.py                  # Web app startup script
+├─ templates/                      # HTML templates
+│  ├─ base.html                    # Base template
+│  ├─ index.html                   # Home page
+│  ├─ login.html                   # Login page
+│  ├─ signup.html                  # Signup page
+│  ├─ dashboard.html               # User dashboard
+│  ├─ generate.html                # Script generation page
+│  └─ view_script.html             # Script viewer
+├─ static/                         # Static assets
+│  ├─ css/style.css                # Custom styles
+│  └─ js/main.js                   # JavaScript functionality
 ├─ schema/edu_script_v0.1.json     # JSON schema definition
 ├─ core/generate_script.py          # OpenAI script generation
 ├─ validation/validate_schema.py   # Schema validation
@@ -20,7 +37,6 @@ edu-gen/
 ├─ tools/demo_runner.py            # Complete workflow runner
 ├─ prompts/prompt_template_math.txt # Math topic prompt template
 ├─ outputs/scripts/                # Generated JSON scripts
-├─ .env.example                    # Environment variables template
 ├─ requirements.txt                # Python dependencies
 └─ README.md                       # This file
 ```
@@ -29,46 +45,54 @@ edu-gen/
 
 1. **Clone or download the project**
 2. **Install dependencies:**
+
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Set up OpenAI API key:**
+3. **Set up environment variables:**
    ```bash
-   cp .env.example .env
-   # Edit .env and add your OpenAI API key
+   export OPENAI_API_KEY="your-openai-api-key-here"
+   export SECRET_KEY="your-secret-key-for-flask-sessions"
    ```
 
 ## Usage
 
-### Quick Start (Complete Workflow)
+### Web Application (Recommended)
 
-Run the complete workflow from topic to audio:
+Start the web application:
+
+```bash
+python run_web_app.py
+```
+
+Then open your browser and go to: http://localhost:5000
+
+**Features:**
+
+- Create an account or log in
+- Generate educational scripts through the web interface
+- View and manage your saved scripts
+- Interactive script viewer with practice questions
+
+### Command Line Interface
+
+#### 1. Complete Workflow
 
 ```bash
 python tools/demo_runner.py "Subtraction within 10: 9 - 4"
 ```
 
-This will:
-1. Generate a JSON script using OpenAI GPT-4o-mini
-2. Validate the script against the schema
-3. Save the script to `outputs/scripts/` directory
+#### 2. Generate Script Only
 
-### Individual Components
-
-#### 1. Generate Script Only
 ```bash
 python core/generate_script.py "Subtraction within 10: 9 - 4"
 ```
 
-#### 2. Validate Script
+#### 3. Validate Script
+
 ```bash
 python validation/validate_schema.py outputs/scripts/Subtraction_within_10_9_-_4.json
-```
-
-#### 3. Check Environment Setup
-```bash
-python config/env_config.py
 ```
 
 ## Schema Format
@@ -98,6 +122,7 @@ Each script includes metadata with language (en-US), tone (elementary), and dura
 ## Example Output
 
 ### Generated Script Structure
+
 ```json
 {
   "metadata": {
@@ -130,6 +155,7 @@ Each script includes metadata with language (en-US), tone (elementary), and dura
 ```
 
 ### Audio Output
+
 - **Format**: JSON scripts ready for TTS processing
 - **Structure**: Well-organized sections for easy audio generation
 - **Quality**: High-quality educational content
@@ -137,6 +163,7 @@ Each script includes metadata with language (en-US), tone (elementary), and dura
 ## Error Handling
 
 The system includes robust error handling for:
+
 - Invalid API responses
 - Schema validation failures
 - Audio synthesis errors
@@ -152,6 +179,10 @@ All errors are logged with clear messages to help with debugging.
 
 ## Dependencies
 
+- `flask>=2.3.0`: Web framework
+- `flask-sqlalchemy>=3.0.0`: Database ORM
+- `flask-bcrypt>=1.0.0`: Password hashing
+- `werkzeug>=2.3.0`: WSGI utilities
 - `openai>=1.0.0`: OpenAI API client
 - `jsonschema>=4.0.0`: JSON schema validation
 - `python-dotenv>=1.0.0`: Environment variable loading
