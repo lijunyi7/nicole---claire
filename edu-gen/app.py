@@ -3,7 +3,7 @@ Flask web application for Educational Script Generator
 Provides web interface for generating and managing educational scripts
 """
 
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 import os
@@ -142,9 +142,10 @@ def generate_script():
             with open(template_path, 'r', encoding='utf-8') as f:
                 prompt_template = f.read()
             
-            # Generate script
-            generator = ScriptGenerator()
-            script_data = generator.generate_script(topic, prompt_template)
+            # Generate script with audio
+            audio_dir = str(Path(__file__).parent / "outputs" / "audio")
+            generator = ScriptGenerator(generate_audio=True)
+            script_data = generator.generate_script(topic, prompt_template, audio_dir)
             
             # Save to database
             script = Script(
@@ -198,6 +199,21 @@ def delete_script(script_id):
     db.session.commit()
     flash('Script deleted successfully', 'success')
     return redirect(url_for('dashboard'))
+
+@app.route('/audio/<path:filename>')
+def serve_audio(filename):
+    """Serve audio files from the outputs/audio directory."""
+    if 'user_id' not in session:
+        flash('Please log in to access audio files', 'error')
+        return redirect(url_for('login'))
+    
+    audio_path = Path(__file__).parent / "outputs" / "audio" / filename
+    
+    if not audio_path.exists():
+        flash('Audio file not found', 'error')
+        return redirect(url_for('dashboard'))
+    
+    return send_file(audio_path, mimetype='audio/mpeg')
 
 # Initialize database
 def create_tables():

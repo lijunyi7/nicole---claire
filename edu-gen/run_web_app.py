@@ -12,21 +12,14 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 def check_environment():
     """Check if required environment variables are set."""
-    required_vars = ['OPENAI_API_KEY']
-    missing_vars = []
-    
-    for var in required_vars:
-        if not os.environ.get(var):
-            missing_vars.append(var)
-    
-    if missing_vars:
-        print("❌ Missing required environment variables:")
-        for var in missing_vars:
-            print(f"   - {var}")
-        print("\nPlease set these variables in your environment or .env file")
+    try:
+        from config.env_config import get_openai_api_key
+        get_openai_api_key()  # This will load .env and check for API key
+        print("✅ Environment configuration loaded successfully")
+        return True
+    except ValueError as e:
+        print(f"❌ Environment configuration issue: {e}")
         return False
-    
-    return True
 
 def create_database():
     """Create database tables if they don't exist."""

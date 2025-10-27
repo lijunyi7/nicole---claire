@@ -4,7 +4,6 @@ Generates educational scripts in JSON format following edu_script_v0.1 schema
 """
 
 import json
-import os
 from typing import Dict, Any
 from openai import OpenAI
 from pathlib import Path
@@ -14,13 +13,21 @@ import sys
 sys.path.append(str(Path(__file__).parent.parent))
 
 from config.env_config import get_openai_api_key
+from core.text_to_speech import TextToSpeechGenerator
 
 
 class ScriptGenerator:
     """Generates educational scripts using OpenAI API."""
     
-    def __init__(self, api_key: str = None):
-        """Initialize the script generator with OpenAI API key."""
+    def __init__(self, api_key: str = None, generate_audio: bool = True, voice: str = None):
+        """
+        Initialize the script generator with OpenAI API key.
+        
+        Args:
+            api_key: OpenAI API key (if None, will try to get from environment)
+            generate_audio: Whether to generate audio files for narrations
+            voice: Voice to use for TTS (if None, uses default)
+        """
         if api_key:
             self.client = OpenAI(api_key=api_key)
         else:
@@ -29,17 +36,21 @@ class ScriptGenerator:
                 self.client = OpenAI(api_key=api_key)
             except ValueError as e:
                 raise ValueError(f"Failed to initialize OpenAI client: {e}")
+        
+        self.generate_audio = generate_audio
+        self.tts_generator = TextToSpeechGenerator(api_key=api_key, voice=voice) if generate_audio else None
     
-    def generate_script(self, topic: str, prompt_template: str) -> Dict[str, Any]:
+    def generate_script(self, topic: str, prompt_template: str, output_dir: str = None) -> Dict[str, Any]:
         """
         Generate an educational script for the given topic.
         
         Args:
             topic: The educational topic (e.g., "十以内减法：9 - 4")
             prompt_template: The prompt template to use
+            output_dir: Directory to save audio files (if generating audio)
             
         Returns:
-            Dictionary containing the generated script
+            Dictionary containing the generated script with optional audio files
             
         Raises:
             Exception: If API call fails or response is invalid
@@ -89,6 +100,17 @@ class ScriptGenerator:
                 "duration_estimate": self._estimate_duration(script_data)
             }
             
+            # Generate audio files if requested
+            if self.generate_audio and self.tts_generator and output_dir:
+                try:
+                    print("Generating audio files...")
+                    audio_files = self.tts_generator.generate_script_audio(script_data, output_dir)
+                    script_data = self.tts_generator.update_script_with_audio(script_data, audio_files)
+                    print(f"Generated {len(audio_files)} audio files")
+                except Exception as e:
+                    print(f"Warning: Audio generation failed: {e}")
+                    print("Continuing with text-only script...")
+            
             return script_data
             
         except json.JSONDecodeError as e:
@@ -134,7 +156,6 @@ class ScriptGenerator:
 
 def main():
     """Demo function to test script generation."""
-    import sys
     
     if len(sys.argv) != 2:
         print("Usage: python generate_script.py <topic>")
@@ -149,15 +170,23 @@ def main():
         prompt_template = f.read()
     
     try:
-        generator = ScriptGenerator()
-        script_data = generator.generate_script(topic, prompt_template)
+        # Create output directories
+        scripts_dir = Path(__file__).parent.parent / "outputs" / "scripts"
+        audio_dir = Path(__file__).parent.parent / "outputs" / "audio"
         
-        # Save to outputs directory
-        output_dir = Path(__file__).parent.parent / "outputs" / "scripts"
-        output_file = output_dir / f"{topic.replace('：', '_').replace(' ', '_')}.json"
+        # Initialize generator with audio generation enabled
+        generator = ScriptGenerator(generate_audio=True)
+        
+        # Generate script with audio
+        script_data = generator.generate_script(topic, prompt_template, str(audio_dir))
+        
+        # Save script to outputs directory
+        output_file = scripts_dir / f"{topic.replace('：', '_').replace(' ', '_')}.json"
         generator.save_script(script_data, str(output_file))
         
         print("Script generation completed successfully!")
+        if generator.generate_audio:
+            print(f"Audio files saved to: {audio_dir}")
         
     except Exception as e:
         print(f"Error: {e}")

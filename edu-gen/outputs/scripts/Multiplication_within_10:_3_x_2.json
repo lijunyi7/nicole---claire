@@ -1,39 +1,39 @@
 {
   "intro": {
-    "title": "Welcome to Addition Fun!",
-    "narration": "Hello, little mathematicians! Today, we're going to explore the exciting world of addition. Are you ready to add some numbers together? Let's start with a simple problem: 1 plus 2!",
+    "title": "Welcome to Multiplication Fun!",
+    "narration": "Hello, friends! Today, we are going to explore a super fun math topic: multiplication! Are you ready to learn how to multiply? Let's get started with a simple example: 3 times 2!",
     "audio_narration": "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/intro_narration.mp3"
   },
   "explanation": {
-    "title": "Understanding 1 + 2",
-    "narration": "When we add, we are putting together two or more numbers to find out how many we have in total. So, if we have 1 apple and we get 2 more apples, we can find out how many apples we have altogether! Let's count: 1 apple plus 2 apples equals 3 apples. So, 1 + 2 = 3! Great job!",
+    "title": "Understanding 3 x 2",
+    "narration": "Multiplication is like adding the same number over and over again. When we say 3 times 2, it means we have 3 groups of 2. Let's think of it like this: if you have 3 bags and each bag has 2 apples, how many apples do you have in total? That's right! You can add 2 + 2 + 2, which equals 6! So, 3 x 2 equals 6!",
     "audio_narration": "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/explanation_narration.mp3"
   },
   "practice_mcq": {
-    "title": "Let's Practice!",
-    "question": "What is 1 + 2?",
+    "title": "Let's Try a Question!",
+    "question": "What is 3 times 2?",
     "options": [
-      "2",
-      "3",
       "4",
-      "5"
+      "5",
+      "6",
+      "7"
     ],
-    "correct_answer": 1,
-    "explanation": "That's right! 1 plus 2 equals 3. You did amazing! Keep practicing, and you'll be an addition expert in no time!",
+    "correct_answer": 2,
+    "explanation": "Great job! The answer is 6 because 3 groups of 2 equals 6. Keep practicing, and you'll be a multiplication master!",
     "audio_question": "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/practice_mcq_question.mp3",
     "audio_explanation": "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/practice_mcq_explanation.mp3"
   },
   "summary": {
-    "title": "You're a Math Star!",
-    "narration": "Today, we learned about adding numbers together. We saw that 1 + 2 equals 3. Remember, addition is all about combining numbers! Keep practicing, and soon you'll be adding all sorts of numbers. Great job today!",
+    "title": "What We Learned Today",
+    "narration": "Today, we learned about multiplying numbers, specifically 3 times 2. Remember, multiplication is just a quick way to add the same number again! Keep practicing your multiplication, and you'll be a superstar in math!",
     "audio_narration": "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/summary_narration.mp3"
   },
   "metadata": {
     "version": "0.1",
     "language": "en-US",
     "tone": "elementary",
-    "topic": "Addition within 10: 1+2",
-    "duration_estimate": 37.0,
+    "topic": "Multiplication within 10: 3 x 2",
+    "duration_estimate": 39.2,
     "audio_generated": true,
     "voice_used": "nova",
     "audio_files": [

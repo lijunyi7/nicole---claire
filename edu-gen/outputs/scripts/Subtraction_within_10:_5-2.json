@@ -1,39 +1,39 @@
 {
   "intro": {
-    "title": "Welcome to Addition Fun!",
-    "narration": "Hello, little mathematicians! Today, we're going to explore the exciting world of addition. Are you ready to add some numbers together? Let's start with a simple problem: 1 plus 2!",
+    "title": "Welcome to Subtraction!",
+    "narration": "Hello, friends! Today, we're going to learn about subtraction using a fun example: 5 minus 2. Are you ready to explore the world of numbers with me?",
     "audio_narration": "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/intro_narration.mp3"
   },
   "explanation": {
-    "title": "Understanding 1 + 2",
-    "narration": "When we add, we are putting together two or more numbers to find out how many we have in total. So, if we have 1 apple and we get 2 more apples, we can find out how many apples we have altogether! Let's count: 1 apple plus 2 apples equals 3 apples. So, 1 + 2 = 3! Great job!",
+    "title": "Understanding Subtraction",
+    "narration": "Subtraction means taking away. When we say 5 minus 2, we start with 5 apples. If we take away 2 apples, how many apples do we have left? Let's count together! 5 apples, take away 2, leaves us with 3 apples. So, 5 minus 2 equals 3!",
     "audio_narration": "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/explanation_narration.mp3"
   },
   "practice_mcq": {
-    "title": "Let's Practice!",
-    "question": "What is 1 + 2?",
+    "title": "Let's Practice Together!",
+    "question": "What is 5 minus 2?",
     "options": [
-      "2",
       "3",
       "4",
+      "2",
       "5"
     ],
-    "correct_answer": 1,
-    "explanation": "That's right! 1 plus 2 equals 3. You did amazing! Keep practicing, and you'll be an addition expert in no time!",
+    "correct_answer": 0,
+    "explanation": "That's right! 5 minus 2 equals 3. Great job! Keep practicing, and you'll be a subtraction pro!",
     "audio_question": "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/practice_mcq_question.mp3",
     "audio_explanation": "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/practice_mcq_explanation.mp3"
   },
   "summary": {
-    "title": "You're a Math Star!",
-    "narration": "Today, we learned about adding numbers together. We saw that 1 + 2 equals 3. Remember, addition is all about combining numbers! Keep practicing, and soon you'll be adding all sorts of numbers. Great job today!",
+    "title": "Great Job Today!",
+    "narration": "Wow, you did amazing today learning about subtraction! Remember, subtraction is all about taking away. Next time you see numbers, think about how you can subtract them. See you next time!",
     "audio_narration": "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/summary_narration.mp3"
   },
   "metadata": {
     "version": "0.1",
     "language": "en-US",
     "tone": "elementary",
-    "topic": "Addition within 10: 1+2",
-    "duration_estimate": 37.0,
+    "topic": "Subtraction within 10: 5-2",
+    "duration_estimate": 30.8,
     "audio_generated": true,
     "voice_used": "nova",
     "audio_files": [

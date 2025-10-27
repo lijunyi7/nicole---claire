@@ -145,9 +145,43 @@ body {
     }
 }
 
+/* Audio player styles */
+.audio-player {
+    margin: 0.5rem 0;
+}
+
+.audio-player audio {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.audio-player audio::-webkit-media-controls-panel {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.audio-player audio::-webkit-media-controls-play-button,
+.audio-player audio::-webkit-media-controls-pause-button {
+    background-color: #667eea;
+    border-radius: 50%;
+}
+
+/* Audio section indicators */
+.audio-indicator {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 0.5rem;
+    color: #28a745;
+    font-size: 0.9rem;
+}
+
+.audio-indicator i {
+    margin-right: 0.25rem;
+}
+
 /* Print styles */
 @media print {
-    .navbar, .btn, footer {
+    .navbar, .btn, footer, .audio-player {
         display: none !important;
     }
     

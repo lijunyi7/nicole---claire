@@ -32,10 +32,26 @@ Script Generator{% endblock %} {% block content %}
         <!-- Introduction Section -->
         <div class="mb-4">
           <h4 class="text-primary">
-            <i class="fas fa-play-circle me-2"></i>{{ content.intro.title }}
+            <i class="fas fa-play-circle me-2"></i>{{ content.intro.title }} {%
+            if content.intro.audio_narration %}
+            <span class="audio-indicator">
+              <i class="fas fa-volume-up"></i>Audio Available
+            </span>
+            {% endif %}
           </h4>
           <div class="bg-light p-3 rounded">
-            <p class="mb-0">{{ content.intro.narration }}</p>
+            <p class="mb-3">{{ content.intro.narration }}</p>
+            {% if content.intro.audio_narration %}
+            <div class="audio-player">
+              <audio controls class="w-100">
+                <source
+                  src="{{ url_for('serve_audio', filename='intro_narration.mp3') }}"
+                  type="audio/mpeg"
+                />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+            {% endif %}
           </div>
         </div>
 
@@ -43,9 +59,25 @@ Script Generator{% endblock %} {% block content %}
         <div class="mb-4">
           <h4 class="text-primary">
             <i class="fas fa-lightbulb me-2"></i>{{ content.explanation.title }}
+            {% if content.explanation.audio_narration %}
+            <span class="audio-indicator">
+              <i class="fas fa-volume-up"></i>Audio Available
+            </span>
+            {% endif %}
           </h4>
           <div class="bg-light p-3 rounded">
-            <p class="mb-0">{{ content.explanation.narration }}</p>
+            <p class="mb-3">{{ content.explanation.narration }}</p>
+            {% if content.explanation.audio_narration %}
+            <div class="audio-player">
+              <audio controls class="w-100">
+                <source
+                  src="{{ url_for('serve_audio', filename='explanation_narration.mp3') }}"
+                  type="audio/mpeg"
+                />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+            {% endif %}
           </div>
         </div>
 
@@ -53,10 +85,27 @@ Script Generator{% endblock %} {% block content %}
         <div class="mb-4">
           <h4 class="text-primary">
             <i class="fas fa-question-circle me-2"></i>{{
-            content.practice_mcq.title }}
+            content.practice_mcq.title }} {% if
+            content.practice_mcq.audio_question or
+            content.practice_mcq.audio_explanation %}
+            <span class="audio-indicator">
+              <i class="fas fa-volume-up"></i>Audio Available
+            </span>
+            {% endif %}
           </h4>
           <div class="bg-light p-3 rounded">
             <h5 class="mb-3">{{ content.practice_mcq.question }}</h5>
+            {% if content.practice_mcq.audio_question %}
+            <div class="audio-player mb-3">
+              <audio controls class="w-100">
+                <source
+                  src="{{ url_for('serve_audio', filename='practice_mcq_question.mp3') }}"
+                  type="audio/mpeg"
+                />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+            {% endif %}
             <div class="row">
               {% for option in content.practice_mcq.options %}
               <div class="col-md-6 mb-2">
@@ -87,6 +136,17 @@ Script Generator{% endblock %} {% block content %}
                 <strong>Correct!</strong> {{ content.practice_mcq.explanation }}
               </div>
             </div>
+            {% if content.practice_mcq.audio_explanation %}
+            <div class="audio-player mt-3">
+              <audio controls class="w-100">
+                <source
+                  src="{{ url_for('serve_audio', filename='practice_mcq_explanation.mp3') }}"
+                  type="audio/mpeg"
+                />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+            {% endif %}
           </div>
         </div>
 
@@ -94,10 +154,25 @@ Script Generator{% endblock %} {% block content %}
         <div class="mb-4">
           <h4 class="text-primary">
             <i class="fas fa-flag-checkered me-2"></i>{{ content.summary.title
-            }}
+            }} {% if content.summary.audio_narration %}
+            <span class="audio-indicator">
+              <i class="fas fa-volume-up"></i>Audio Available
+            </span>
+            {% endif %}
           </h4>
           <div class="bg-light p-3 rounded">
-            <p class="mb-0">{{ content.summary.narration }}</p>
+            <p class="mb-3">{{ content.summary.narration }}</p>
+            {% if content.summary.audio_narration %}
+            <div class="audio-player">
+              <audio controls class="w-100">
+                <source
+                  src="{{ url_for('serve_audio', filename='summary_narration.mp3') }}"
+                  type="audio/mpeg"
+                />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -115,6 +190,18 @@ Script Generator{% endblock %} {% block content %}
           <div class="col-md-6">
             <p><strong>Topic:</strong> {{ content.metadata.topic }}</p>
             <p><strong>Language:</strong> {{ content.metadata.language }}</p>
+            {% if content.metadata.audio_generated %}
+            <p>
+              <strong>Audio:</strong>
+              <span class="text-success"
+                ><i class="fas fa-check-circle me-1"></i>Generated</span
+              >
+            </p>
+            {% if content.metadata.voice_used %}
+            <p>
+              <strong>Voice:</strong> {{ content.metadata.voice_used.title() }}
+            </p>
+            {% endif %} {% endif %}
           </div>
           <div class="col-md-6">
             <p><strong>Tone:</strong> {{ content.metadata.tone }}</p>
@@ -122,6 +209,12 @@ Script Generator{% endblock %} {% block content %}
               <strong>Estimated Duration:</strong> {{
               content.metadata.duration_estimate }} seconds
             </p>
+            {% if content.metadata.audio_files %}
+            <p>
+              <strong>Audio Files:</strong> {{
+              content.metadata.audio_files|length }} files
+            </p>
+            {% endif %}
           </div>
         </div>
       </div>

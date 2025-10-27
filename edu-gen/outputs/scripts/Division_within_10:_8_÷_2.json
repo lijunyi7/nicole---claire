@@ -1,39 +1,39 @@
 {
   "intro": {
-    "title": "Welcome to Addition Fun!",
-    "narration": "Hello, little mathematicians! Today, we're going to explore the exciting world of addition. Are you ready to add some numbers together? Let's start with a simple problem: 1 plus 2!",
+    "title": "Welcome to Division Fun!",
+    "narration": "Hello, little mathematicians! Today, we're going to explore the exciting world of division. Are you ready to divide some numbers? Let's start with a simple problem: 8 divided by 2!",
     "audio_narration": "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/intro_narration.mp3"
   },
   "explanation": {
-    "title": "Understanding 1 + 2",
-    "narration": "When we add, we are putting together two or more numbers to find out how many we have in total. So, if we have 1 apple and we get 2 more apples, we can find out how many apples we have altogether! Let's count: 1 apple plus 2 apples equals 3 apples. So, 1 + 2 = 3! Great job!",
+    "title": "Understanding 8 ÷ 2",
+    "narration": "Division is like sharing equally. When we say 8 divided by 2, it means we want to share 8 items equally between 2 groups. Let's think of it like this: if you have 8 apples and you want to share them equally with 1 friend, how many apples does each person get? That's right! Each person gets 4 apples! So, 8 ÷ 2 equals 4!",
     "audio_narration": "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/explanation_narration.mp3"
   },
   "practice_mcq": {
     "title": "Let's Practice!",
-    "question": "What is 1 + 2?",
+    "question": "What is 8 ÷ 2?",
     "options": [
       "2",
       "3",
       "4",
       "5"
     ],
-    "correct_answer": 1,
-    "explanation": "That's right! 1 plus 2 equals 3. You did amazing! Keep practicing, and you'll be an addition expert in no time!",
+    "correct_answer": 2,
+    "explanation": "That's right! 8 divided by 2 equals 4. You did amazing! Keep practicing, and you'll be a division expert in no time!",
     "audio_question": "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/practice_mcq_question.mp3",
     "audio_explanation": "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/practice_mcq_explanation.mp3"
   },
   "summary": {
     "title": "You're a Math Star!",
-    "narration": "Today, we learned about adding numbers together. We saw that 1 + 2 equals 3. Remember, addition is all about combining numbers! Keep practicing, and soon you'll be adding all sorts of numbers. Great job today!",
+    "narration": "Today, we learned about dividing numbers. We saw that 8 ÷ 2 equals 4. Remember, division is all about sharing equally! Keep practicing, and soon you'll be dividing all sorts of numbers. Great job today!",
     "audio_narration": "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/summary_narration.mp3"
   },
   "metadata": {
     "version": "0.1",
     "language": "en-US",
     "tone": "elementary",
-    "topic": "Addition within 10: 1+2",
-    "duration_estimate": 37.0,
+    "topic": "Division within 10: 8 ÷ 2",
+    "duration_estimate": 42.0,
     "audio_generated": true,
     "voice_used": "nova",
     "audio_files": [
@@ -41,7 +41,7 @@
       "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/explanation_narration.mp3",
       "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/practice_mcq_question.mp3",
       "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/practice_mcq_explanation.mp3",
-      "/Users/karyzheng/nicole---claire/edu-gen/outputs/audio/summary_narration.mp3"
+      "/Users/karyzheng/nicole---claire/nicole---claire/edu-gen/outputs/audio/summary_narration.mp3"
     ]
   }
 }
