@@ -1,13 +1,13 @@
 # Educational Script Generator
 
-A minimal Python project that converts educational topics into structured JSON teaching scripts and synthesizes them into TTS audio.
+A minimal Python project that converts educational topics into structured JSON teaching scripts.
 
 ## Features
 
 - 🎯 **Topic to Script**: Convert educational topics into structured JSON scripts
 - 📋 **Schema Validation**: Ensures all scripts conform to edu_script_v0.1 schema
-- 🎵 **TTS Audio**: Synthesizes scripts into MP3 audio with natural speech
 - 🔧 **Modular Design**: Clean separation of concerns with testable components
+- 🔑 **Environment Configuration**: Easy API key management with .env files
 
 ## Project Structure
 
@@ -16,11 +16,10 @@ edu-gen/
 ├─ schema/edu_script_v0.1.json     # JSON schema definition
 ├─ core/generate_script.py          # OpenAI script generation
 ├─ validation/validate_schema.py   # Schema validation
-├─ tts/synthesize_audio.py         # Audio synthesis
+├─ config/env_config.py            # Environment configuration
 ├─ tools/demo_runner.py            # Complete workflow runner
 ├─ prompts/prompt_template_math.txt # Math topic prompt template
 ├─ outputs/scripts/                # Generated JSON scripts
-├─ outputs/audio/                  # Generated MP3 files
 ├─ .env.example                    # Environment variables template
 ├─ requirements.txt                # Python dependencies
 └─ README.md                       # This file
@@ -38,7 +37,6 @@ edu-gen/
    ```bash
    cp .env.example .env
    # Edit .env and add your OpenAI API key
-   export OPENAI_API_KEY=your_api_key_here
    ```
 
 ## Usage
@@ -54,8 +52,7 @@ python tools/demo_runner.py "Subtraction within 10: 9 - 4"
 This will:
 1. Generate a JSON script using OpenAI GPT-4o-mini
 2. Validate the script against the schema
-3. Synthesize audio using OpenAI TTS
-4. Save both files to `outputs/` directory
+3. Save the script to `outputs/scripts/` directory
 
 ### Individual Components
 
@@ -69,9 +66,9 @@ python core/generate_script.py "Subtraction within 10: 9 - 4"
 python validation/validate_schema.py outputs/scripts/Subtraction_within_10_9_-_4.json
 ```
 
-#### 3. Synthesize Audio
+#### 3. Check Environment Setup
 ```bash
-python tts/synthesize_audio.py outputs/scripts/Subtraction_within_10_9_-_4.json
+python config/env_config.py
 ```
 
 ## Schema Format
@@ -133,10 +130,9 @@ Each script includes metadata with language (en-US), tone (elementary), and dura
 ```
 
 ### Audio Output
-- **Format**: MP3
-- **Voice**: OpenAI TTS (alloy voice)
-- **Gaps**: 300ms between sections
-- **Quality**: High-quality speech synthesis
+- **Format**: JSON scripts ready for TTS processing
+- **Structure**: Well-organized sections for easy audio generation
+- **Quality**: High-quality educational content
 
 ## Error Handling
 
@@ -158,8 +154,7 @@ All errors are logged with clear messages to help with debugging.
 
 - `openai>=1.0.0`: OpenAI API client
 - `jsonschema>=4.0.0`: JSON schema validation
-- `pydub>=0.25.0`: Audio processing
-- `pathlib2>=2.3.0`: Path utilities
+- `python-dotenv>=1.0.0`: Environment variable loading
 
 ## License
 

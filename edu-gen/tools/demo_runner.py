@@ -14,6 +14,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from core.generate_script import ScriptGenerator
 from validation.validate_schema import SchemaValidator
+from config.env_config import check_environment_setup
 
 
 class DemoRunner:
@@ -43,10 +44,14 @@ class DemoRunner:
         results = {}
         
         try:
-            print("🎯 Starting Educational Script Generation")
+            print("Starting Educational Script Generation")
             print("=" * 50)
             print(f"Topic: {topic}")
             print()
+            
+            # Check environment setup
+            if not check_environment_setup():
+                raise Exception("Environment not properly configured. Please check your .env file.")
             
             # Step 1: Load prompt template
             print("📝 Step 1: Loading prompt template...")

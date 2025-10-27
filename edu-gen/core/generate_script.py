@@ -8,6 +8,12 @@ import os
 from typing import Dict, Any
 from openai import OpenAI
 from pathlib import Path
+import sys
+
+# Add parent directory to path for imports
+sys.path.append(str(Path(__file__).parent.parent))
+
+from config.env_config import get_openai_api_key
 
 
 class ScriptGenerator:
@@ -15,9 +21,14 @@ class ScriptGenerator:
     
     def __init__(self, api_key: str = None):
         """Initialize the script generator with OpenAI API key."""
-        self.client = OpenAI(api_key=api_key or os.getenv("OPENAI_API_KEY"))
-        if not self.client.api_key:
-            raise ValueError("OpenAI API key is required. Set OPENAI_API_KEY environment variable.")
+        if api_key:
+            self.client = OpenAI(api_key=api_key)
+        else:
+            try:
+                api_key = get_openai_api_key()
+                self.client = OpenAI(api_key=api_key)
+            except ValueError as e:
+                raise ValueError(f"Failed to initialize OpenAI client: {e}")
     
     def generate_script(self, topic: str, prompt_template: str) -> Dict[str, Any]:
         """
@@ -57,7 +68,17 @@ class ScriptGenerator:
             
             # Parse the JSON response
             script_content = response.choices[0].message.content
-            script_data = json.loads(script_content)
+            print(f"Debug: Raw OpenAI response: {script_content[:200]}...")  # Show first 200 chars
+            raw_data = json.loads(script_content)
+            
+            # Handle nested structure - extract content if wrapped in edu_script_v0.1
+            if "edu_script_v0.1" in raw_data:
+                script_data = raw_data["edu_script_v0.1"]
+                # If content is nested, extract it
+                if "content" in script_data:
+                    script_data = script_data["content"]
+            else:
+                script_data = raw_data
             
             # Add metadata
             script_data["metadata"] = {
