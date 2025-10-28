@@ -13,6 +13,9 @@ from typing import Dict, Any
 sys.path.append(str(Path(__file__).parent.parent))
 
 from core.generate_script import ScriptGenerator
+from core.text_to_speech import TextToSpeechGenerator
+from core.video_frame_generator import VideoFrameGenerator
+from core.video_generator import VideoGenerator
 from validation.validate_schema import SchemaValidator
 from config.env_config import check_environment_setup
 
@@ -24,6 +27,20 @@ class DemoRunner:
         """Initialize the demo runner with all required components."""
         self.script_generator = ScriptGenerator()
         self.validator = SchemaValidator()
+        self.tts_generator = TextToSpeechGenerator(voice="nova")
+        
+        # Initialize frame generator with custom background
+        backend_dir = Path(__file__).parent.parent
+        background_path = backend_dir.parent / "background_edu.jpg"
+        self.frame_generator = VideoFrameGenerator(background_path=str(background_path) if background_path.exists() else None)
+        
+        try:
+            self.video_generator = VideoGenerator()
+            self.video_enabled = True
+        except RuntimeError:
+            self.video_generator = None
+            self.video_enabled = False
+            print("⚠️  Video generation disabled (MoviePy not available)")
     
     def run_complete_workflow(self, topic: str, output_dir: str = None) -> Dict[str, str]:
         """
@@ -80,16 +97,61 @@ class DemoRunner:
             print("✅ Script validation passed")
             print()
             
-            # Step 4: Save script
-            print("💾 Step 4: Saving script...")
-            script_filename = f"{topic.replace('：', '_').replace(' ', '_')}.json"
-            script_path = output_dir / "scripts" / script_filename
-            self.script_generator.save_script(script_data, str(script_path))
+            # Step 4: Generate audio files
+            print("🎤 Step 4: Generating audio files...")
+            safe_topic = topic.replace('：', '_').replace(' ', '_')[:50]
+            from datetime import datetime
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            script_id = f"{safe_topic}_{timestamp}"
+            
+            audio_dir = output_dir / "audio"
+            audio_files = self.tts_generator.generate_script_audio(script_data, str(audio_dir), script_id=script_id)
+            updated_script = self.tts_generator.update_script_with_audio(script_data, audio_files)
+            print(f"✅ Generated {len(audio_files)} audio files")
+            print()
+            
+            # Step 5: Generate video frames
+            print("🖼️  Step 5: Generating video frames...")
+            frames_dir = output_dir / "frames"
+            frame_files = self.frame_generator.generate_script_frames(script_data, str(frames_dir), script_id=script_id)
+            updated_script = self.frame_generator.update_script_with_frames(updated_script, frame_files)
+            print(f"✅ Generated {len(frame_files)} frames")
+            print()
+            
+            # Step 6: Generate videos
+            if self.video_enabled:
+                print("🎬 Step 6: Generating videos...")
+                videos_dir = output_dir / "videos"
+                video_files = self.video_generator.generate_script_videos(
+                    script_data,
+                    str(audio_dir),
+                    str(frames_dir),
+                    str(videos_dir),
+                    script_id=script_id
+                )
+                updated_script = self.video_generator.update_script_with_videos(updated_script, video_files)
+                print(f"✅ Generated {len(video_files)} videos")
+                results["videos"] = [str(videos_dir / vf) for vf in video_files]
+            else:
+                print("⚠️  Step 6: Skipping video generation (MoviePy not available)")
+                video_files = []
+            print()
+            
+            # Step 7: Save updated script
+            print("💾 Step 7: Saving script with media references...")
+            script_filename = f"{safe_topic}_{timestamp}.json"
+            scripts_dir = output_dir / "scripts"
+            scripts_dir.mkdir(parents=True, exist_ok=True)
+            script_path = scripts_dir / script_filename
+            with open(script_path, 'w', encoding='utf-8') as f:
+                json.dump(updated_script, f, ensure_ascii=False, indent=2)
             results["script"] = str(script_path)
+            results["audio_files"] = [str(audio_dir / af) for af in audio_files]
+            results["frame_files"] = [str(frames_dir / ff) for ff in frame_files]
             print(f"✅ Script saved to: {script_path}")
             print()
             
-            # Step 5: Show results
+            # Step 8: Show results
             print("📊 Step 5: Final Results")
             print("-" * 30)
             
@@ -182,7 +244,19 @@ def main():
         print("\n" + "=" * 50)
         print("FINAL OUTPUTS")
         print("=" * 50)
-        print(f"Script: {results['script']}")
+        print(f"✅ Script: {results['script']}")
+        
+        if 'audio_files' in results:
+            print(f"✅ Audio Files: {len(results['audio_files'])} files")
+        
+        if 'frame_files' in results:
+            print(f"✅ Frames: {len(results['frame_files'])} files")
+        
+        if 'videos' in results:
+            print(f"✅ Videos: {len(results['videos'])} files")
+            print("\n📹 Generated Videos:")
+            for video in results['videos']:
+                print(f"   - {video}")
         
         # Show script preview
         print("\n" + "=" * 50)

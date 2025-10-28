@@ -9,9 +9,12 @@ from flask_bcrypt import Bcrypt
 import os
 from datetime import datetime
 import json
+import re
 from pathlib import Path
 import sys
 from core.text_to_speech import TextToSpeechGenerator
+from core.video_frame_generator import VideoFrameGenerator
+from core.video_generator import VideoGenerator
 # Add backend directory to path for imports
 sys.path.append(str(Path(__file__).parent))
 
@@ -154,17 +157,55 @@ def generate_script():
 
             # 2) Generate MULTIPLE audio files (intro/explanation/question/…)
             #    They will be saved under: outputs/audio/
+            #    Create unique identifier based on topic and timestamp
+            safe_topic = re.sub(r'[^a-zA-Z0-9_-]', '_', topic)[:50]  # Sanitize topic
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            script_id = f"{safe_topic}_{timestamp}"
+            
             tts = TextToSpeechGenerator(voice="nova")
             audio_dir = Path(__file__).parent.parent / "outputs" / "audio"
             audio_dir.mkdir(parents=True, exist_ok=True)
 
-            audio_files = tts.generate_script_audio(script_data, str(audio_dir))  # returns full paths
+            audio_files = tts.generate_script_audio(script_data, str(audio_dir), script_id=script_id)  # returns full paths
 
-            # 3) Store only basenames into the script for use with /audio/<filename>
+            # 2a) Store only basenames into the script for use with /audio/<filename>
             #    and mark metadata (audio_generated, voice, etc.)
             updated_script = tts.update_script_with_audio(script_data, audio_files)
 
-            # 4) Save to database (store updated_script with audio paths)
+            # 3) Generate video frames for each narration
+            # Use custom background image
+            background_path = Path(__file__).parent.parent / "background_edu.jpg"
+            frame_generator = VideoFrameGenerator(background_path=str(background_path))
+            frames_dir = Path(__file__).parent.parent / "outputs" / "frames"
+            frames_dir.mkdir(parents=True, exist_ok=True)
+
+            frame_files = frame_generator.generate_script_frames(script_data, str(frames_dir), script_id=script_id)
+            
+            # 3a) Update script with frame paths
+            updated_script = frame_generator.update_script_with_frames(updated_script, frame_files)
+
+            # 4) Generate videos by combining audio and frames
+            video_dir = Path(__file__).parent.parent / "outputs" / "videos"
+            video_dir.mkdir(parents=True, exist_ok=True)
+            
+            try:
+                video_generator = VideoGenerator()
+                video_files = video_generator.generate_script_videos(
+                    script_data,
+                    str(audio_dir),
+                    str(frames_dir),
+                    str(video_dir),
+                    script_id=script_id
+                )
+                
+                # 4a) Update script with video paths
+                updated_script = video_generator.update_script_with_videos(updated_script, video_files)
+            except RuntimeError as e:
+                print(f"Warning: Video generation failed: {e}")
+                # Continue without videos - they're optional
+                updated_script["metadata"]["videos_generated"] = False
+
+            # 5) Save to database (store updated_script with audio, frame, and video paths)
             script = Script(
                 title=updated_script.get('metadata', {}).get('topic', topic),
                 topic=topic,
@@ -231,6 +272,36 @@ def serve_audio(filename):
         return redirect(url_for('dashboard'))
     
     return send_file(audio_path, mimetype='audio/mpeg')
+
+@app.route('/frames/<path:filename>')
+def serve_frames(filename):
+    """Serve frame files from the outputs/frames directory."""
+    if 'user_id' not in session:
+        flash('Please log in to access frames', 'error')
+        return redirect(url_for('login'))
+    
+    frame_path = Path(__file__).parent.parent / "outputs" / "frames" / filename
+    
+    if not frame_path.exists():
+        flash('Frame file not found', 'error')
+        return redirect(url_for('dashboard'))
+    
+    return send_file(frame_path, mimetype='image/png')
+
+@app.route('/videos/<path:filename>')
+def serve_videos(filename):
+    """Serve video files from the outputs/videos directory."""
+    if 'user_id' not in session:
+        flash('Please log in to access videos', 'error')
+        return redirect(url_for('login'))
+    
+    video_path = Path(__file__).parent.parent / "outputs" / "videos" / filename
+    
+    if not video_path.exists():
+        flash('Video file not found', 'error')
+        return redirect(url_for('dashboard'))
+    
+    return send_file(video_path, mimetype='video/mp4')
 
 # Initialize database
 def create_tables():

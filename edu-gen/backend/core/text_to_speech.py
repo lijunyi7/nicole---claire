@@ -84,13 +84,14 @@ class TextToSpeechGenerator:
         except Exception as e:
             raise RuntimeError(f"TTS generation failed: {e}") from e
     
-    def generate_script_audio(self, script_data: Dict[str, Any], output_dir: str) -> List[str]:
+    def generate_script_audio(self, script_data: Dict[str, Any], output_dir: str, script_id: str = None) -> List[str]:
         """
         Generate audio files for all narrations in a script.
         
         Args:
             script_data: The script data containing narrations
             output_dir: Directory to save audio files
+            script_id: Unique identifier for this script (used in filenames to avoid overwrites)
             
         Returns:
             List of generated audio file paths
@@ -98,13 +99,19 @@ class TextToSpeechGenerator:
         audio_files = []
         output_path = Path(output_dir)
         
+        # Create unique prefix based on script_id or use generic
+        if script_id:
+            prefix = f"{script_id}_"
+        else:
+            prefix = ""
+        
         # Generate audio for each section
         sections_to_process = [
-            ("intro", "narration", "intro_narration.mp3"),
-            ("explanation", "narration", "explanation_narration.mp3"),
-            ("practice_mcq", "question", "practice_mcq_question.mp3"),
-            ("practice_mcq", "explanation", "practice_mcq_explanation.mp3"),
-            ("summary", "narration", "summary_narration.mp3")
+            ("intro", "narration", f"{prefix}intro_narration.mp3"),
+            ("explanation", "narration", f"{prefix}explanation_narration.mp3"),
+            ("practice_mcq", "question", f"{prefix}practice_mcq_question.mp3"),
+            ("practice_mcq", "explanation", f"{prefix}practice_mcq_explanation.mp3"),
+            ("summary", "narration", f"{prefix}summary_narration.mp3")
         ]
         
         for section, field, filename in sections_to_process:
