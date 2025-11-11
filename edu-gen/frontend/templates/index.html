@@ -1,0 +1,123 @@
+{% extends "base.html" %} {% block title %}Home - Educational Script Generator{%
+endblock %} {% block content %}
+<div class="hero-section p-5 text-center">
+  <h1 class="display-4 fw-bold mb-4">
+    <i class="fas fa-graduation-cap me-3"></i>Educational Script Generator
+  </h1>
+  <p class="lead mb-4">
+    Create engaging educational scripts with AI-powered content generation and
+    voice narration
+  </p>
+  <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+    {% if not session.user_id %}
+    <a href="{{ url_for('signup') }}" class="btn btn-light btn-lg me-md-2">
+      <i class="fas fa-user-plus me-2"></i>Get Started
+    </a>
+    <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg">
+      <i class="fas fa-sign-in-alt me-2"></i>Login
+    </a>
+    {% else %}
+    <a href="{{ url_for('dashboard') }}" class="btn btn-light btn-lg me-md-2">
+      <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+    </a>
+    <a
+      href="{{ url_for('generate_script') }}"
+      class="btn btn-outline-light btn-lg"
+    >
+      <i class="fas fa-plus me-2"></i>Generate Script
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="features-section mt-5">
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-robot fa-3x text-primary mb-3"></i>
+          <h5 class="card-title">AI-Powered Generation</h5>
+          <p class="card-text">
+            Generate educational scripts using advanced AI technology tailored
+            for elementary students.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-volume-up fa-3x text-primary mb-3"></i>
+          <h5 class="card-title">Voice Narration</h5>
+          <p class="card-text">
+            Automatically generate high-quality voice narration for all script
+            sections.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-chalkboard-teacher fa-3x text-primary mb-3"></i>
+          <h5 class="card-title">Interactive Learning</h5>
+          <p class="card-text">
+            Create engaging practice questions with immediate feedback for
+            students.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-5">
+  <div class="col-md-8 mx-auto text-center">
+    <h3 class="mb-4">How It Works</h3>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="d-flex flex-column align-items-center">
+          <div
+            class="step-number bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mb-3"
+            style="width: 60px; height: 60px"
+          >
+            1
+          </div>
+          <h5>Enter Topic</h5>
+          <p class="text-muted">
+            Specify the educational topic you want to teach
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="d-flex flex-column align-items-center">
+          <div
+            class="step-number bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mb-3"
+            style="width: 60px; height: 60px"
+          >
+            2
+          </div>
+          <h5>AI Generation</h5>
+          <p class="text-muted">
+            Our AI creates engaging content and voice narration
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="d-flex flex-column align-items-center">
+          <div
+            class="step-number bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mb-3"
+            style="width: 60px; height: 60px"
+          >
+            3
+          </div>
+          <h5>Teach & Learn</h5>
+          <p class="text-muted">
+            Use the generated script with audio for teaching
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

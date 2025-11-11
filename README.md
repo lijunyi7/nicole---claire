@@ -1,161 +1,114 @@
 # Educational Script Generator
 
-A minimal Python project that converts educational topics into structured JSON teaching scripts.
+A comprehensive web application for generating educational scripts with AI-powered content creation and voice narration.
 
 ## Features
 
-- 🎯 **Topic to Script**: Convert educational topics into structured JSON scripts
-- 📋 **Schema Validation**: Ensures all scripts conform to edu_script_v0.1 schema
-- 🔧 **Modular Design**: Clean separation of concerns with testable components
-- 🔑 **Environment Configuration**: Easy API key management with .env files
+- **AI-Powered Script Generation**: Create engaging educational content using OpenAI's GPT models
+- **Voice Narration**: Automatically generate high-quality audio narration for all script sections
+- **Interactive Practice Questions**: Include multiple-choice questions with immediate feedback
+- **User Management**: Secure authentication and script management
+- **Modern Web Interface**: Responsive design with Bootstrap 5
 
 ## Project Structure
 
 ```
 edu-gen/
-├─ schema/edu_script_v0.1.json     # JSON schema definition
-├─ core/generate_script.py          # OpenAI script generation
-├─ validation/validate_schema.py   # Schema validation
-├─ config/env_config.py            # Environment configuration
-├─ tools/demo_runner.py            # Complete workflow runner
-├─ prompts/prompt_template_math.txt # Math topic prompt template
-├─ outputs/scripts/                # Generated JSON scripts
-├─ .env.example                    # Environment variables template
-├─ requirements.txt                # Python dependencies
-└─ README.md                       # This file
+├── backend/                 # Backend application
+│   ├── app.py              # Main Flask application
+│   ├── core/               # Core functionality
+│   │   ├── generate_script.py
+│   │   └── text_to_speech.py
+│   ├── config/             # Configuration
+│   ├── prompts/            # Prompt templates
+│   ├── schema/             # JSON schemas
+│   ├── validation/         # Validation utilities
+│   └── tools/              # Utility tools
+├── frontend/               # Frontend application
+│   ├── templates/          # HTML templates
+│   └── static/             # CSS, JS, and assets
+│       ├── css/
+│       └── js/
+├── outputs/                # Generated content
+│   ├── scripts/            # JSON script files
+│   └── audio/              # MP3 audio files
+├── .env                    # Environment variables
+├── requirements.txt        # Python dependencies
+└── run_web_app.py         # Application startup script
 ```
 
 ## Installation
 
-1. **Clone or download the project**
-2. **Install dependencies:**
+1. **Clone the repository**
+
+   ```bash
+   git clone <repository-url>
+   cd edu-gen
+   ```
+
+2. **Create virtual environment**
+
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. **Install dependencies**
+
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Set up OpenAI API key:**
-   ```bash
-   cp .env.example .env
-   # Edit .env and add your OpenAI API key
+4. **Set up environment variables**
+   Create a `.env` file in the root directory:
+   ```env
+   OPENAI_API_KEY=your_openai_api_key_here
+   SECRET_KEY=your_secret_key_for_flask_sessions
    ```
 
 ## Usage
 
-### Quick Start (Complete Workflow)
+1. **Start the application**
 
-Run the complete workflow from topic to audio:
+   ```bash
+   python run_web_app.py
+   ```
 
-```bash
-python tools/demo_runner.py "Subtraction within 10: 9 - 4"
-```
+2. **Access the web interface**
+   Open your browser and go to: http://localhost:5000
 
-This will:
-1. Generate a JSON script using OpenAI GPT-4o-mini
-2. Validate the script against the schema
-3. Save the script to `outputs/scripts/` directory
+3. **Create an account** and start generating educational scripts!
 
-### Individual Components
+## API Endpoints
 
-#### 1. Generate Script Only
-```bash
-python core/generate_script.py "Subtraction within 10: 9 - 4"
-```
+- `GET /` - Home page
+- `GET /login` - Login page
+- `POST /login` - User authentication
+- `GET /signup` - Registration page
+- `POST /signup` - User registration
+- `GET /dashboard` - User dashboard
+- `GET /generate` - Script generation page
+- `POST /generate` - Generate new script
+- `GET /script/<id>` - View script
+- `POST /delete_script/<id>` - Delete script
+- `GET /audio/<filename>` - Serve audio files
 
-#### 2. Validate Script
-```bash
-python validation/validate_schema.py outputs/scripts/Subtraction_within_10_9_-_4.json
-```
+## Technologies Used
 
-#### 3. Check Environment Setup
-```bash
-python config/env_config.py
-```
+- **Backend**: Flask, SQLAlchemy, OpenAI API
+- **Frontend**: Bootstrap 5, HTML5, CSS3, JavaScript
+- **Database**: SQLite (easily upgradeable to PostgreSQL/MySQL)
+- **Audio**: OpenAI Text-to-Speech API
+- **Authentication**: Flask-Bcrypt for secure password hashing
 
-## Schema Format
+## Contributing
 
-The generated scripts follow the `edu_script_v0.1` schema with these sections:
-
-- **intro**: Warm introduction to the topic
-- **explanation**: Detailed explanation of concepts
-- **practice_mcq**: Multiple choice question with options
-- **summary**: Conclusion and key takeaways
-
-Each script includes metadata with language (en-US), tone (elementary), and duration estimates.
-
-## Configuration
-
-### Environment Variables
-
-- `OPENAI_API_KEY`: Required for OpenAI API access
-- `OUTPUT_DIR`: Optional custom output directory
-
-### Customization
-
-- **Prompt Templates**: Edit `prompts/prompt_template_math.txt` for different subject areas
-- **Audio Settings**: Modify gap duration and voice in `tts/synthesize_audio.py`
-- **Schema**: Update `schema/edu_script_v0.1.json` for different script formats
-
-## Example Output
-
-### Generated Script Structure
-```json
-{
-  "metadata": {
-    "version": "0.1",
-    "language": "en-US",
-    "tone": "elementary",
-    "topic": "Subtraction within 10: 9 - 4",
-    "duration_estimate": 45.2
-  },
-  "intro": {
-    "title": "Welcome to Subtraction",
-    "narration": "Today we're going to learn subtraction within 10..."
-  },
-  "explanation": {
-    "title": "Subtraction Concepts",
-    "narration": "Subtraction means taking away one number from another..."
-  },
-  "practice_mcq": {
-    "title": "Practice Time",
-    "question": "What is 9 - 4?",
-    "options": ["3", "4", "5", "6"],
-    "correct_answer": 2,
-    "explanation": "9 minus 4 equals 5, because when we take away 4 from 9, we have 5 left."
-  },
-  "summary": {
-    "title": "Summary",
-    "narration": "Today we learned about subtraction within 10..."
-  }
-}
-```
-
-### Audio Output
-- **Format**: JSON scripts ready for TTS processing
-- **Structure**: Well-organized sections for easy audio generation
-- **Quality**: High-quality educational content
-
-## Error Handling
-
-The system includes robust error handling for:
-- Invalid API responses
-- Schema validation failures
-- Audio synthesis errors
-- File I/O operations
-
-All errors are logged with clear messages to help with debugging.
-
-## Requirements
-
-- Python 3.10+
-- OpenAI API key
-- Internet connection for API calls
-
-## Dependencies
-
-- `openai>=1.0.0`: OpenAI API client
-- `jsonschema>=4.0.0`: JSON schema validation
-- `python-dotenv>=1.0.0`: Environment variable loading
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
 ## License
 
-This project is for educational purposes. Please ensure you have proper OpenAI API access and follow their usage policies.
+This project is licensed under the MIT License.
