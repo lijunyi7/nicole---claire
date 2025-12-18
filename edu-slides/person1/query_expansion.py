@@ -57,33 +57,15 @@ Return only the queries, one per line, without numbering or bullets."""
             max_tokens=300
         )
         
-        # Parse the response into a list of queries
+        # Parse the response into a list of queries – use exactly what GPT returns
         queries_text = response.choices[0].message.content.strip()
         queries = [q.strip() for q in queries_text.split('\n') if q.strip()]
-        
-        # Fallback: if we don't get enough queries, add some basic ones
-        if len(queries) < 3:
-            queries.extend([
-                f"{topic} overview",
-                f"{topic} key concepts",
-                f"{topic} examples",
-                f"{topic} process",
-                f"{topic} applications"
-            ])
-        
-        return queries[:7]  # Limit to 7 queries max
+        # Only use GPT-generated queries; don't inject our own templates
+        return queries[:5]  # Limit to 5 queries max
         
     except Exception as e:
-        print(f"Warning: Query expansion failed, using fallback queries: {e}")
-        # Fallback to basic query expansion
-        return [
-            f"{topic} overview",
-            f"{topic} key concepts",
-            f"{topic} steps",
-            f"{topic} examples",
-            f"{topic} process",
-            f"{topic} applications",
-            f"{topic} explanation"
-        ]
+        print(f"Warning: Query expansion failed, using minimal fallback: {e}")
+        # Minimal, neutral fallback if the API fails hard: just search the topic itself
+        return [topic]
 
 

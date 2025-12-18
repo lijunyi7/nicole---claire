@@ -1,0 +1,73 @@
+{% extends "base.html" %} {% block title %}Search Resources - Educational Slides Resource Collector{%
+endblock %} {% block content %}
+<div class="row">
+  <div class="col-md-8 mx-auto">
+    <h2 class="mb-4">
+      <i class="fas fa-file-powerpoint me-2"></i>Generate Educational Slides
+    </h2>
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <form id="searchForm" method="POST" action="{{ url_for('search') }}">
+          <div class="mb-3">
+            <label for="topic" class="form-label">
+              <i class="fas fa-book me-2"></i>Topic
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="topic"
+              name="topic"
+              placeholder="e.g., Photosynthesis, World War II, Fractions"
+              required
+              value="{{ request.form.get('topic', '') }}"
+            />
+            <div class="form-text">
+              Enter the educational topic you want to create slides for
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="grade" class="form-label">
+              <i class="fas fa-graduation-cap me-2"></i>Grade Level
+            </label>
+            <select class="form-select" id="grade" name="grade" required>
+              <option value="elementary" {% if request.form.get('grade') == 'elementary' %}selected{% endif %}>Elementary</option>
+              <option value="middle" {% if request.form.get('grade') == 'middle' %}selected{% endif %}>Middle School</option>
+              <option value="high" {% if request.form.get('grade') == 'high' %}selected{% endif %}>High School</option>
+            </select>
+            <div class="form-text">
+              Select the appropriate grade level for the content
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg w-100" id="searchBtn">
+            <i class="fas fa-file-powerpoint me-2"></i>Generate Slides
+          </button>
+        </form>
+      </div>
+    </div>
+
+
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+      <i class="fas fa-exclamation-triangle me-2"></i>{{ error }}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<div id="loadingModal" class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body text-center py-4">
+        <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <h5>Generating slides...</h5>
+        <p class="text-muted">Collecting resources, filtering, and creating slides. This may take a few moments.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

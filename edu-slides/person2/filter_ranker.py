@@ -65,8 +65,12 @@ class DomainFilter:
         
         # Extract domain from URL
         domain = self._extract_domain(url)
+
+        # Treat any .edu or .gov domain as trusted (e.g., school.edu, district.k12.ca.us)
+        if domain.endswith(".edu") or domain.endswith(".gov") or domain.endswith(".org"):
+            return True
         
-        # Check if domain is in trusted list
+        # Check if domain is in explicit trusted list
         return domain in self.trusted_domains
     
     def get_trust_score(self, url: str) -> float:
@@ -83,6 +87,11 @@ class DomainFilter:
             return 0.0
         
         domain = self._extract_domain(url)
+
+        # .edu / .gov domains get top trust if not explicitly listed
+        if domain.endswith(".edu") or domain.endswith(".gov"):
+            return self.trusted_domains.get(domain, 1.0)
+
         return self.trusted_domains.get(domain, 0.0)
     
     @staticmethod

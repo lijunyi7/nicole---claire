@@ -1,0 +1,169 @@
+{% extends "base.html" %} {% block title %}Home - Educational Slides Resource
+Collector{% endblock %} {% block content %}
+<div class="hero-section p-5 text-center">
+  <h1 class="display-4 fw-bold mb-4">
+    <i class="fas fa-chalkboard-teacher me-3"></i>Educational Slides Resource
+    Collector
+  </h1>
+  <p class="lead mb-4">
+    Generate educational slides automatically from trusted sources using
+    AI-powered search and intelligent ranking
+  </p>
+  <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+    {% if not session.user_id %}
+    <a href="{{ url_for('signup') }}" class="btn btn-light btn-lg me-md-2">
+      <i class="fas fa-user-plus me-2"></i>Get Started
+    </a>
+    <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg">
+      <i class="fas fa-sign-in-alt me-2"></i>Login
+    </a>
+    {% else %}
+    <a href="{{ url_for('dashboard') }}" class="btn btn-light btn-lg me-md-2">
+      <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+    </a>
+    <a href="{{ url_for('search') }}" class="btn btn-outline-light btn-lg">
+      <i class="fas fa-file-powerpoint me-2"></i>Generate Slides
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="features-section mt-5">
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-search fa-3x text-primary mb-3"></i>
+          <h5 class="card-title">AI-Powered Search</h5>
+          <p class="card-text">
+            Collect 15-20 raw search results from trusted educational sources
+            using advanced AI search technology.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-filter fa-3x text-primary mb-3"></i>
+          <h5 class="card-title">Smart Filtering</h5>
+          <p class="card-text">
+            Automatically filter results to only trusted educational domains and
+            remove duplicates.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-sort-amount-down fa-3x text-primary mb-3"></i>
+          <h5 class="card-title">Intelligent Ranking</h5>
+          <p class="card-text">
+            Rank resources by relevance, trust, recency, and format to find the
+            best educational content.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="how-it-works" class="row mt-5">
+  <div class="col-md-8 mx-auto text-center">
+    <h3 class="mb-4">How It Works</h3>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="d-flex flex-column align-items-center">
+          <div
+            class="step-number bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mb-3"
+            style="width: 60px; height: 60px"
+          >
+            1
+          </div>
+          <h5>Enter Topic & Grade</h5>
+          <p class="text-muted">
+            Specify the educational topic and grade level you want to search for
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="d-flex flex-column align-items-center">
+          <div
+            class="step-number bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mb-3"
+            style="width: 60px; height: 60px"
+          >
+            2
+          </div>
+          <h5>Generate Slides</h5>
+          <p class="text-muted">
+            Our system automatically creates educational slides from the
+            top-ranked resources
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="d-flex flex-column align-items-center">
+          <div
+            class="step-number bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mb-3"
+            style="width: 60px; height: 60px"
+          >
+            3
+          </div>
+          <h5>Filter & Rank</h5>
+          <p class="text-muted">
+            Results are automatically filtered and ranked by relevance and
+            quality
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-5 mb-4">
+  <div class="col-md-10 mx-auto">
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+          <i class="fas fa-info-circle me-2"></i>Trusted Sources
+        </h5>
+      </div>
+      <div class="card-body">
+        <p class="mb-2">
+          Our system filters results to only include trusted educational
+          domains:
+        </p>
+        <div class="row">
+          <div class="col-md-6">
+            <ul class="list-unstyled">
+              <li>
+                <i class="fas fa-check text-success me-2"></i>Khan Academy
+              </li>
+              <li><i class="fas fa-check text-success me-2"></i>OpenStax</li>
+              <li><i class="fas fa-check text-success me-2"></i>CK-12</li>
+              <li><i class="fas fa-check text-success me-2"></i>Wikipedia</li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <ul class="list-unstyled">
+              <li>
+                <i class="fas fa-check text-success me-2"></i>PBS, TED, National
+                Geographic
+              </li>
+              <li>
+                <i class="fas fa-check text-success me-2"></i>Government sites
+                (.edu, .gov)
+              </li>
+              <li>
+                <i class="fas fa-check text-success me-2"></i>MIT, Stanford, and
+                more
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
