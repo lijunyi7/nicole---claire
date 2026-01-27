@@ -5,7 +5,12 @@ Uses OpenAI's responses.create() with web_search tool to perform searches,
 handling pagination, retries, and combining results from multiple queries.
 """
 
+import os
+import re
 import time
+import urllib.error
+import urllib.request
+from html.parser import HTMLParser
 from typing import List, Dict, Any
 from openai import OpenAI
 import sys
@@ -15,6 +20,29 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
 from config.env_config import get_openai_api_key
+
+
+class _HTMLTextExtractor(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self._text_parts: List[str] = []
+        self._skip = False
+
+    def handle_starttag(self, tag: str, attrs: List[tuple]) -> None:
+        if tag in {"script", "style", "noscript"}:
+            self._skip = True
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag in {"script", "style", "noscript"}:
+            self._skip = False
+
+    def handle_data(self, data: str) -> None:
+        if not self._skip and data:
+            self._text_parts.append(data)
+
+    def get_text(self) -> str:
+        text = " ".join(part.strip() for part in self._text_parts if part.strip())
+        return re.sub(r"\s+", " ", text).strip()
 
 
 class SearchOrchestrator:
@@ -264,15 +292,15 @@ class SearchOrchestrator:
             ""
         )
         
-        # For snippet, prioritize annotation text, then try multiple field names
+        # For snippet, prioritize the item's own snippet; fallback to annotation text
         snippet = (
-            annotation_text or
             get_value("snippet") or
             get_value("description") or
             get_value("summary") or
             get_value("excerpt") or
             get_value("text") or
             get_value("content") or
+            annotation_text or
             ""
         )
         
@@ -291,6 +319,169 @@ class SearchOrchestrator:
             "date": date,
             "snippet": snippet
         }
+
+    def _fetch_page_text(self, url: str, max_bytes: int = 200_000, timeout: int = 12) -> str:
+        """Fetch page text from a URL and return extracted text."""
+        if not url or not url.startswith(("http://", "https://")):
+            return ""
+
+        try:
+            request = urllib.request.Request(
+                url,
+                headers={
+                    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/537.36 Safari/537.36"
+                },
+            )
+            with urllib.request.urlopen(request, timeout=timeout) as response:
+                content_type = response.headers.get("Content-Type", "")
+                if "text/html" not in content_type and "text/plain" not in content_type:
+                    return ""
+
+                raw = response.read(max_bytes)
+                encoding = response.headers.get_content_charset() or "utf-8"
+                decoded = raw.decode(encoding, errors="ignore")
+
+            if "text/plain" in content_type:
+                return re.sub(r"\s+", " ", decoded).strip()
+
+            parser = _HTMLTextExtractor()
+            parser.feed(decoded)
+            return parser.get_text()
+        except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, ValueError):
+            return ""
+
+    def _summarize_text(self, text: str, topic: str, grade: str = None) -> str:
+        """Summarize extracted content with OpenAI."""
+        if not text:
+            return ""
+
+        target_audience = f"{grade} students" if grade else "students"
+        prompt = (
+            f"Summarize the following source content in 2-3 sentences for {target_audience} "
+            f"about '{topic}'. Use only the provided content and avoid speculation.\n\n"
+            f"CONTENT:\n{text}"
+        )
+
+        response = self.client.responses.create(
+            model="gpt-4.1-mini",
+            input=prompt,
+        )
+
+        summary = getattr(response, "output_text", None)
+        if summary:
+            return summary.strip()
+
+        if hasattr(response, "output") and response.output:
+            for output in response.output:
+                if hasattr(output, "content") and output.content:
+                    for content in output.content:
+                        text_value = getattr(content, "text", None)
+                        if text_value:
+                            return text_value.strip()
+
+        return ""
+
+    def _summarize_snippet(self, snippet: str, topic: str, grade: str = None) -> str:
+        """Summarize a snippet."""
+        snippet = (snippet or "").strip()
+        if not snippet:
+            return ""
+
+        target_audience = f"{grade} students" if grade else "students"
+        prompt = (
+            f"Summarize the following snippet in 1-2 sentences for {target_audience} "
+            f"about '{topic}'. Use only the snippet and avoid speculation.\n\n"
+            f"SNIPPET:\n{snippet}"
+        )
+
+        response = self.client.responses.create(
+            model="gpt-4.1-mini",
+            input=prompt,
+        )
+
+        summary = getattr(response, "output_text", None)
+        if summary:
+            return summary.strip()
+
+        if hasattr(response, "output") and response.output:
+            for output in response.output:
+                if hasattr(output, "content") and output.content:
+                    for content in output.content:
+                        text_value = getattr(content, "text", None)
+                        if text_value:
+                            return text_value.strip()
+
+        return ""
+
+    def _summarize_result(self, result: Dict[str, Any], topic: str, grade: str = None) -> str:
+        """Summarize a result using GPT based on title + snippet."""
+        title = (result.get("title") or "").strip()
+        snippet = (result.get("snippet") or "").strip()
+
+        if not title and not snippet:
+            return ""
+
+        target_audience = f"{grade} students" if grade else "students"
+        snippet = snippet[:1200]
+        prompt = (
+            f"Write 2-3 short sentences for {target_audience} about '{topic}'. "
+            f"Use only the provided title and snippet. Avoid speculation and avoid bullet points.\n\n"
+            f"TITLE:\n{title}\n\n"
+            f"SNIPPET:\n{snippet}"
+        )
+
+        response = self.client.responses.create(
+            model="gpt-4.1-mini",
+            input=prompt,
+        )
+
+        summary = getattr(response, "output_text", None)
+        if summary:
+            return summary.strip()
+
+        if hasattr(response, "output") and response.output:
+            for output in response.output:
+                if hasattr(output, "content") and output.content:
+                    for content in output.content:
+                        text_value = getattr(content, "text", None)
+                        if text_value:
+                            return text_value.strip()
+
+        return ""
+
+    def enrich_summaries(
+        self,
+        results: List[Dict[str, Any]],
+        topic: str,
+        grade: str = None,
+        max_items: int = 10,
+        force: bool = False,
+    ) -> bool:
+        """Fill empty/short summaries by fetching and summarizing source pages."""
+        enabled = os.getenv("SUMMARY_ENABLED", "1").lower() not in {"0", "false", "no"}
+        if not enabled:
+            return False
+
+        updated = False
+        processed = 0
+        max_items = max(0, max_items)
+
+        for result in results:
+            if processed >= max_items:
+                break
+
+            summary = (result.get("summary") or "").strip()
+            if not force and len(summary) >= 40:
+                continue
+
+            new_summary = self._summarize_result(result, topic, grade)
+
+            if new_summary:
+                result["summary"] = new_summary
+                updated = True
+                processed += 1
+
+        return updated
 
     def search_multiple(self, queries: List[str], max_results_per_query: int = 5) -> List[Dict[str, Any]]:
         """

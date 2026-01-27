@@ -43,7 +43,16 @@ Collector{% endblock %} {% block content %}
                   </a>
                 </h5>
                 {% if result.summary %}
-                <p class="card-text text-muted">{{ result.summary }}</p>
+                {% set summary_points = result.summary.split('.') %}
+                <ul class="list-unstyled text-muted mb-3">
+                  {% for point in summary_points %}
+                  {% if point.strip() %}
+                  <li class="mb-1">
+                    <i class="fas fa-check-circle text-success me-2"></i>{{ point.strip() }}
+                  </li>
+                  {% endif %}
+                  {% endfor %}
+                </ul>
                 {% endif %}
                 <div class="mt-3">
                   <span class="badge bg-info me-2">

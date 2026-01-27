@@ -4,6 +4,7 @@ Simplified version that collects raw search results from OpenAI web search.
 """
 
 import json
+import os
 from typing import List, Dict, Any
 import sys
 from pathlib import Path
@@ -97,6 +98,21 @@ class RawResultCollector:
                 unique_results.append(result)
         
         print(f"Collected {len(unique_results)} unique results")
+
+        # Enrich summaries using GPT (title + snippet)
+        try:
+            max_items = int(os.getenv("SUMMARY_MAX_ITEMS", "10"))
+            force = os.getenv("SUMMARY_FORCE", "1").lower() not in {"0", "false", "no"}
+            self.search_orchestrator.enrich_summaries(
+                unique_results,
+                topic,
+                grade,
+                max_items=max_items,
+                force=force,
+            )
+        except Exception as enrich_err:
+            print(f"Warning: failed to enrich summaries: {enrich_err}")
+
         return unique_results[:20]  # Return up to 20 items
 
 

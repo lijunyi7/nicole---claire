@@ -1,0 +1,115 @@
+{
+  "topic": "World War I",
+  "student_level": "elementary",
+  "slides": [
+    {
+      "title": "What Was World War I?",
+      "bullets": [
+        "It was a big war from 1914 to 1918.",
+        "Many countries fought on two sides.",
+        "Also called the Great War."
+      ],
+      "sources": [
+        "History for Kids - Ducksters",
+        "BBC Bitesize"
+      ],
+      "notes": "Introduce the war briefly and its time frame."
+    },
+    {
+      "title": "Why Did the War Start?",
+      "bullets": [
+        "Countries wanted more power.",
+        "A leader was killed, starting the war.",
+        "Alliances made the war bigger."
+      ],
+      "sources": [
+        "History for Kids - Ducksters",
+        "National Geographic Kids"
+      ]
+    },
+    {
+      "title": "Which Countries Fought?",
+      "bullets": [
+        "The Allies included France, Britain, and the USA.",
+        "The Central Powers included Germany and Austria-Hungary.",
+        "Many other countries joined later."
+      ],
+      "sources": [
+        "History.com",
+        "Britannica Kids"
+      ]
+    },
+    {
+      "title": "Life in the Trenches",
+      "bullets": [
+        "Soldiers lived in long ditches called trenches.",
+        "Conditions were hard and dirty.",
+        "It was dangerous with fighting and diseases."
+      ],
+      "sources": [
+        "Imperial War Museums",
+        "BBC Bitesize"
+      ]
+    },
+    {
+      "title": "New Technology in the War",
+      "bullets": [
+        "Tanks and airplanes were used.",
+        "Poison gas was a new weapon.",
+        "Machines guns made fighting deadly."
+      ],
+      "sources": [
+        "History.com",
+        "National Geographic Kids"
+      ]
+    },
+    {
+      "title": "How Did the War End?",
+      "bullets": [
+        "The war ended in 1918 with a treaty.",
+        "The Allies won the war.",
+        "Many countries had to agree to peace."
+      ],
+      "sources": [
+        "Britannica Kids",
+        "History for Kids - Ducksters"
+      ]
+    },
+    {
+      "title": "The Treaty of Versailles",
+      "bullets": [
+        "It officially ended the war.",
+        "Made Germany accept blame and pay money.",
+        "Set new rules to try to keep peace."
+      ],
+      "sources": [
+        "History.com",
+        "BBC Bitesize"
+      ]
+    },
+    {
+      "title": "Effects of World War I",
+      "bullets": [
+        "Millions of people were affected.",
+        "Borders of countries changed.",
+        "It helped cause World War II later."
+      ],
+      "sources": [
+        "National Geographic Kids",
+        "Imperial War Museums"
+      ]
+    },
+    {
+      "title": "Remembering World War I",
+      "bullets": [
+        "We honor soldiers who fought.",
+        "Many memorials and ceremonies happen.",
+        "Learning helps us understand history."
+      ],
+      "sources": [
+        "Veterans Affairs Canada",
+        "History.com"
+      ]
+    }
+  ]
+}

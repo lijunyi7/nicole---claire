@@ -16,10 +16,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
 # Import Person 1 and Person 2 modules
-from person1.search_collector import RawResultCollector
-from person2.filter_ranker import filter_and_rank
-from backend.slides_generator import generate_slides
-from person1.result_parser import parse_result
+from backend.slides_generator import generate_slide_deck
 
 app = Flask(__name__,
             template_folder='../frontend/templates',
@@ -158,90 +155,35 @@ def search():
             return render_template('search.html')
         
         try:
-            # Step 1: Collect raw results using Person 1
-            collector = RawResultCollector()
-            raw_results = collector.collect_raw(topic, grade)
-            print(f"API returned {len(raw_results)} results")
-            
-            if not raw_results:
-                flash('No results found from the search API. Please try a different topic or check your API configuration.', 'error')
-                return render_template('search.html')
-            
-            print(f"Processing {len(raw_results)} raw results...")
+            # Step 1: Generate a full slide deck using a single LLM prompt
+            deck, _raw_text = generate_slide_deck(topic, grade)
+            slides = deck.get("slides", [])
 
-            # Step 1b: Always persist PARSED raw results so result_parser workflows
-            # can reuse them later, even if filtering later returns 0 items.
-            try:
-                data_dir = Path(__file__).parent.parent / "data" / "raw"
-                data_dir.mkdir(parents=True, exist_ok=True)
-                slug_topic = topic.replace(" ", "_").lower()
-                slug_grade = grade.replace(" ", "_").lower()
-                parsed_path = data_dir / f"{slug_topic}_{slug_grade}_parsed.json"
-                parsed_items = [parse_result(item) for item in raw_results]
-                with open(parsed_path, "w", encoding="utf-8") as f_parsed:
-                    json.dump(parsed_items, f_parsed, indent=2, ensure_ascii=False)
-                print(f"Saved parsed raw results to {parsed_path}")
-            except Exception as parse_save_err:
-                print(f"Warning: failed to save parsed raw data: {parse_save_err}")
-            
-            # Step 2: Filter and rank using Person 2 (always use top 10)
-            ranked_results = filter_and_rank(raw_results, topic, top_n=10)
-            print(f"After filtering and ranking: {len(ranked_results)} results")
-            
-            # Step 2b: Prepare file paths for saving/loading ranked results
-            data_dir = Path(__file__).parent.parent / "data" / "raw"
+            # Step 2: Persist deck JSON (source of truth for frontend)
+            data_dir = Path(__file__).parent.parent / "data" / "generated"
             data_dir.mkdir(parents=True, exist_ok=True)
             slug_topic = topic.replace(" ", "_").lower()
             slug_grade = grade.replace(" ", "_").lower()
-            ranked_path = data_dir / f"{slug_topic}_{slug_grade}_ranked.json"
-            
-            # Step 2c: Save ranked results to JSON file first (if we have any new results)
-            if ranked_results:
-                try:
-                    with open(ranked_path, "w", encoding="utf-8") as f_ranked:
-                        json.dump(ranked_results, f_ranked, indent=2, ensure_ascii=False)
-                    print(f"Saved ranked results to {ranked_path}")
-                except Exception as save_err:
-                    print(f"Warning: failed to save ranked data to disk: {save_err}")
-            
-            # Step 2d: Always load ranked results from JSON file (use saved file as source of truth)
-            # This ensures we always work from the persisted data format
-            ranked_results = []
-            try:
-                if ranked_path.exists():
-                    with open(ranked_path, "r", encoding="utf-8") as f_ranked:
-                        loaded_results = json.load(f_ranked)
-                    if isinstance(loaded_results, list) and loaded_results:
-                        ranked_results = loaded_results
-                        print(f"Loaded ranked results from {ranked_path} ({len(ranked_results)} items)")
-                    else:
-                        print(f"Ranked JSON file exists but is empty or invalid")
-                else:
-                    print(f"No ranked JSON file found at {ranked_path}")
-            except Exception as load_err:
-                print(f"Warning: failed to load ranked data from {ranked_path}: {load_err}")
-            
-            if not ranked_results:
-                flash('No results passed the filtering criteria for this topic and grade, and no cached ranked data was found. Please try a different topic.', 'error')
-                return render_template('search.html')
-            
-            # Step 3: Generate slides from ranked results
-            slides = generate_slides(ranked_results, topic, grade)
-            
+            deck_path = data_dir / f"{slug_topic}_{slug_grade}_slides.json"
+            with open(deck_path, "w", encoding="utf-8") as f_deck:
+                json.dump(deck, f_deck, indent=2, ensure_ascii=False)
+            print(f"Saved slide deck to {deck_path}")
+
             if not slides:
-                flash('Error generating slides. Please try again.', 'error')
+                flash('No slides were generated. Please try again.', 'error')
                 return render_template('search.html')
-            
-            # Step 4: Save slides to database if user is logged in
+
+            # Step 3: Save slides to database if user is logged in
             slide_id = None
             if 'user_id' in session:
                 try:
+                    source_count = sum(len(s.get("sources", [])) for s in slides)
                     slide = Slide(
                         title=f"{topic} - {grade.title()}",
                         topic=topic,
                         grade=grade,
                         slides_content=json.dumps(slides, ensure_ascii=False),
-                        resource_count=len(ranked_results),
+                        resource_count=source_count,
                         user_id=session['user_id']
                     )
                     db.session.add(slide)
@@ -252,14 +194,14 @@ def search():
                     print(f"Error saving slide: {e}")
                     db.session.rollback()
                     flash('Slides generated, but failed to save. You can still view them.', 'warning')
-            
-            # Redirect to slides page
-            return render_template('slides.html', 
-                                 slides=slides, 
-                                 topic=topic, 
+
+            # Render slides
+            return render_template('slides.html',
+                                 slides=slides,
+                                 topic=topic,
                                  grade=grade,
                                  generated_at=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                                 resource_count=len(ranked_results),
+                                 resource_count=source_count if slides else 0,
                                  slide_id=slide_id)
             
         except Exception as e:

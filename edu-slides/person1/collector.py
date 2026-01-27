@@ -6,6 +6,7 @@ to collect raw search results for a given topic and grade level.
 """
 
 import json
+import os
 from pathlib import Path
 from typing import List, Dict, Any
 from .query_expansion import expand_query
@@ -50,11 +51,30 @@ def collect_raw(topic: str, grade: str = None) -> List[Dict[str, Any]]:
     cache_name += ".json"
     cache_path = CACHE_DIR / cache_name
 
-    # If cached, load and return
+    # If cached, load and return (but enrich summaries if missing)
     if cache_path.exists():
         with open(cache_path, "r", encoding="utf-8") as f:
             print(f"⚡ Loading cached results: {cache_path.name}")
-            return json.load(f)
+            cached_results = json.load(f)
+
+        if any(not (item.get("summary") or "").strip() for item in cached_results):
+            try:
+                orchestrator = SearchOrchestrator()
+                max_items = int(os.getenv("SUMMARY_MAX_ITEMS", "10"))
+                force = os.getenv("SUMMARY_FORCE", "1").lower() not in {"0", "false", "no"}
+                if orchestrator.enrich_summaries(
+                    cached_results,
+                    topic,
+                    grade,
+                    max_items=max_items,
+                    force=force,
+                ):
+                    with open(cache_path, "w", encoding="utf-8") as f:
+                        json.dump(cached_results, f, indent=2, ensure_ascii=False)
+            except Exception as enrich_err:
+                print(f"Warning: failed to enrich cached summaries: {enrich_err}")
+
+        return cached_results
 
     # Step 1: Expand topic into multiple queries
     print(f"🔍 Expanding queries for topic: {topic}")
@@ -80,6 +100,20 @@ def collect_raw(topic: str, grade: str = None) -> List[Dict[str, Any]]:
     print(f"📝 Validating results...")
     valid_results = [r for r in all_results if validate_result(r)]
     
+    # Step 3b: Enrich summaries from source content when missing
+    try:
+        max_items = int(os.getenv("SUMMARY_MAX_ITEMS", "10"))
+        force = os.getenv("SUMMARY_FORCE", "1").lower() not in {"0", "false", "no"}
+        orchestrator.enrich_summaries(
+            valid_results,
+            topic,
+            grade,
+            max_items=max_items,
+            force=force,
+        )
+    except Exception as enrich_err:
+        print(f"Warning: failed to enrich summaries: {enrich_err}")
+
     # Step 4: Return 15-20 items
     final_results = valid_results[:20]  # Take up to 20
     
