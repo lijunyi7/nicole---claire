@@ -154,8 +154,8 @@ Edugen/
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/lijunyi7/Edugen.git
-   cd Edugen
+   git clone https://github.com/lijunyi7/Edugen_2026.git
+   cd Edugen_2026
    ```
 
 2. **Create and activate a virtual environment**
