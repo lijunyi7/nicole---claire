@@ -1,0 +1,42 @@
+[
+  {
+    "title": "Linear Algebra and Geometry | CADRE",
+    "url": "https://cadrek12.org/resources/linear-algebra-and-geometry?utm_source=openai",
+    "summary": "",
+    "date": "",
+    "snippet": "Linear algebra is a branch of mathematics that deals with vectors, vector spaces, and linear transformations. It's fundamental in various fields, including engineering, physics, computer science, and ",
+    "score": 0.42
+  },
+  {
+    "title": "Practical Guide to Linear Algebra in Data Science and AI",
+    "url": "https://www.freecodecamp.org/news/linear-algebra-roadmap/?utm_source=openai",
+    "summary": "",
+    "date": "",
+    "snippet": "Linear algebra, a branch of mathematics focusing on vectors, matrices, and linear transformations, has numerous real-life applications that are both practical and accessible to beginners. Here are som",
+    "score": 0.42
+  },
+  {
+    "title": "Linear independence",
+    "url": "https://en.wikipedia.org/wiki/Linear_independence?utm_source=openai",
+    "summary": "",
+    "date": "",
+    "snippet": "In linear algebra, vectors are fundamental objects that represent quantities with both magnitude and direction. They are essential in various fields, including physics, engineering, and computer scien",
+    "score": 0.245
+  },
+  {
+    "title": "Cramer's rule",
+    "url": "https://en.wikipedia.org/wiki/Cramer%27s_rule?utm_source=openai",
+    "summary": "",
+    "date": "",
+    "snippet": "Solving linear equations using matrices is a fundamental technique in linear algebra, particularly useful for handling systems of linear equations. Here's a step-by-step guide to approach this:\n\n**1. ",
+    "score": 0.07
+  },
+  {
+    "title": "Conjugate gradient squared method",
+    "url": "https://en.wikipedia.org/wiki/Conjugate_gradient_squared_method?utm_source=openai",
+    "summary": "",
+    "date": "",
+    "snippet": "Solving linear equations using matrices is a fundamental technique in linear algebra, particularly useful for handling systems of linear equations. Here's a step-by-step guide to approach this:\n\n**1. ",
+    "score": 0.07
+  }
+]
